@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GradleMigrationSettings" migrationVersion="1" />
+  <component name="GradleSettings">
+    <option name="linkedExternalProjectsSettings">
+      <GradleProjectSettings>
+        <compositeConfiguration>
+          <compositeBuild compositeDefinitionSource="SCRIPT">
+            <builds>
+              <build path="$PROJECT_DIR$/processor" name="processor">
+                <projects>
+                  <project path="$PROJECT_DIR$/processor" />
+                  <project path="$PROJECT_DIR$/processor/gradle-plugin" />
+                  <project path="$PROJECT_DIR$/processor/processor" />
+                </projects>
+              </build>
+              <build path="$PROJECT_DIR$/processor/ksp" name="ksp">
+                <projects>
+                  <project path="$PROJECT_DIR$/processor/ksp" />
+                  <project path="$PROJECT_DIR$/processor/ksp/api" />
+                  <project path="$PROJECT_DIR$/processor/ksp/common-deps" />
+                  <project path="$PROJECT_DIR$/processor/ksp/common-util" />
+                  <project path="$PROJECT_DIR$/processor/ksp/compiler-plugin" />
+                  <project path="$PROJECT_DIR$/processor/ksp/gradle-plugin" />
+                  <project path="$PROJECT_DIR$/processor/ksp/integration-tests" />
+                  <project path="$PROJECT_DIR$/processor/ksp/kotlin-analysis-api" />
+                  <project path="$PROJECT_DIR$/processor/ksp/symbol-processing" />
+                  <project path="$PROJECT_DIR$/processor/ksp/symbol-processing-aa-embeddable" />
+                  <project path="$PROJECT_DIR$/processor/ksp/symbol-processing-cmdline" />
+                  <project path="$PROJECT_DIR$/processor/ksp/test-utils" />
+                </projects>
+              </build>
+              <build path="$PROJECT_DIR$/processor/ksp/buildSrc" name="buildSrc">
+                <projects>
+                  <project path="$PROJECT_DIR$/processor/ksp/buildSrc" />
+                </projects>
+              </build>
+            </builds>
+          </compositeBuild>
+        </compositeConfiguration>
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="gradleJvm" value="jbr-17" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/processor" />
+            <option value="$PROJECT_DIR$/processor/gradle-plugin" />
+            <option value="$PROJECT_DIR$/processor/ksp" />
+            <option value="$PROJECT_DIR$/processor/ksp/api" />
+            <option value="$PROJECT_DIR$/processor/ksp/buildSrc" />
+            <option value="$PROJECT_DIR$/processor/ksp/common-deps" />
+            <option value="$PROJECT_DIR$/processor/ksp/common-util" />
+            <option value="$PROJECT_DIR$/processor/ksp/compiler-plugin" />
+            <option value="$PROJECT_DIR$/processor/ksp/gradle-plugin" />
+            <option value="$PROJECT_DIR$/processor/ksp/integration-tests" />
+            <option value="$PROJECT_DIR$/processor/ksp/kotlin-analysis-api" />
+            <option value="$PROJECT_DIR$/processor/ksp/symbol-processing" />
+            <option value="$PROJECT_DIR$/processor/ksp/symbol-processing-aa-embeddable" />
+            <option value="$PROJECT_DIR$/processor/ksp/symbol-processing-cmdline" />
+            <option value="$PROJECT_DIR$/processor/ksp/test-utils" />
+            <option value="$PROJECT_DIR$/processor/processor" />
+            <option value="$PROJECT_DIR$/samples" />
+            <option value="$PROJECT_DIR$/samples/kmp" />
+            <option value="$PROJECT_DIR$/samples/kmp/android-desktop-js-wasmjs" />
+            <option value="$PROJECT_DIR$/samples/kmp/android-desktop-js-wasmjs/android" />
+            <option value="$PROJECT_DIR$/samples/kmp/android-desktop-js-wasmjs/common" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+    </option>
+  </component>
+</project>
