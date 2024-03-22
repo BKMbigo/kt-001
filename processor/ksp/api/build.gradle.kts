@@ -1,6 +1,7 @@
 import com.google.devtools.ksp.configureMetalava
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+group = "io.github.bkmbigo.gallery.ksp"
 description = "Kotlin Symbol Processing API"
 
 val signingKey: String? by project
@@ -39,7 +40,7 @@ publishing {
             artifact(tasks["sourcesJar"])
             artifact(tasks["dokkaJavadocJar"])
             pom {
-                name.set("com.google.devtools.ksp:symbol-processing-api")
+                name.set("io.github.bkmbigo.gallery.ksp:symbol-processing-api")
                 description.set("Symbol processing for Kotlin")
             }
         }

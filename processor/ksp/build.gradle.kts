@@ -11,7 +11,7 @@ if (extra.has("kspOnlyVersion") && kotlinBaseVersion != null) {
 }
 
 if (!extra.has("kspVersion")) {
-    extra.set("kspVersion", "2.0.255-SNAPSHOT")
+    extra.set("kspVersion", "0.0.1")
 }
 
 repositories {
@@ -40,9 +40,9 @@ plugins {
 
 version = rootProject.extra.get("kspVersion") as String
 
-configureKtlintApplyToIdea()
+//configureKtlintApplyToIdea()
 subprojects {
-    group = "com.google.devtools.ksp"
+    group = "io.github.bkmbigo.gallery.ksp.internal"
     version = rootProject.extra.get("kspVersion") as String
     configureKtlint()
     repositories {

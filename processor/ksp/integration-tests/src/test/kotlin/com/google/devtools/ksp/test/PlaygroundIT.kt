@@ -223,6 +223,7 @@ class PlaygroundIT(val useKSP2: Boolean) {
             Assert.assertTrue(jarFile.getEntry("hello/HELLO.class").size > 0)
             Assert.assertTrue(jarFile.getEntry("com/example/AClassBuilder.class").size > 0)
         }
+        Assert.assertTrue(result.output.contains("w: Language version 2.0 is experimental"))
         project.restore(buildFile.path)
     }
 
@@ -262,12 +263,14 @@ class PlaygroundIT(val useKSP2: Boolean) {
             Assert.assertTrue(jarFile.getEntry("hello/HELLO.class").size > 0)
             Assert.assertTrue(jarFile.getEntry("com/example/AClassBuilder.class").size > 0)
         }
+        Assert.assertTrue(result.output.contains("w: Language version 2.0 is experimental"))
         project.restore(buildFile.path)
         project.restore(gradleProperties.path)
     }
 
     @Test
     fun testVersions() {
+        Assume.assumeFalse(useKSP2)
         val kotlinCompile = "org.jetbrains.kotlin.gradle.tasks.KotlinCompile"
         val buildFile = File(project.root, "workload/build.gradle.kts")
         buildFile.appendText("\ntasks.withType<$kotlinCompile> {")
@@ -301,12 +304,12 @@ class PlaygroundIT(val useKSP2: Boolean) {
         gradleRunner.withArguments("build").buildAndFail().let {
             Assert.assertEquals(TaskOutcome.SUCCESS, it.task(":workload:kspKotlin")?.outcome)
             Assert.assertEquals(TaskOutcome.FAILED, it.task(":workload:compileKotlin")?.outcome)
-            Assert.assertTrue("Unresolved reference 'AClassBuilder'" in it.output)
+            Assert.assertTrue("Unresolved reference: AClassBuilder" in it.output)
         }
         gradleRunner.withArguments("build").buildAndFail().let {
             Assert.assertEquals(TaskOutcome.UP_TO_DATE, it.task(":workload:kspKotlin")?.outcome)
             Assert.assertEquals(TaskOutcome.FAILED, it.task(":workload:compileKotlin")?.outcome)
-            Assert.assertTrue("Unresolved reference 'AClassBuilder'" in it.output)
+            Assert.assertTrue("Unresolved reference: AClassBuilder" in it.output)
         }
 
         project.restore("workload/build.gradle.kts")
@@ -335,6 +338,7 @@ class PlaygroundIT(val useKSP2: Boolean) {
 
     @Test
     fun testProjectExtensionCompilerOptions() {
+        Assume.assumeFalse(useKSP2)
         Assume.assumeFalse(System.getProperty("os.name").startsWith("Windows", ignoreCase = true))
         val properties = File(project.root, "gradle.properties")
         properties.writeText(

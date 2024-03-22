@@ -2,6 +2,7 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.gradle.jvm.tasks.Jar
 import java.util.zip.ZipFile
 
+
 evaluationDependsOn(":kotlin-analysis-api")
 
 val signingKey: String? by project
@@ -170,7 +171,7 @@ publishing {
             artifact(tasks["sourcesJar"])
             artifact(tasks["shadowJar"])
             pom {
-                name.set("com.google.devtools.ksp:symbol-processing-aa-embeddable")
+                name.set("io.github.bkmbigo.gallery.ksp:symbol-processing-aa-embeddable")
                 description.set("KSP implementation on Kotlin Analysis API")
                 withXml {
                     fun groovy.util.Node.addDependency(
@@ -189,8 +190,8 @@ publishing {
 
                     asNode().appendNode("dependencies").apply {
                         addDependency("org.jetbrains.kotlin", "kotlin-stdlib", aaKotlinBaseVersion)
-                        addDependency("com.google.devtools.ksp", "symbol-processing-api", version)
-                        addDependency("com.google.devtools.ksp", "symbol-processing-common-deps", version)
+                        addDependency("io.github.bkmbigo.gallery.ksp", "symbol-processing-api", version)
+                        addDependency("io.github.bkmbigo.gallery.ksp", "symbol-processing-common-deps", version)
                     }
                 }
             }

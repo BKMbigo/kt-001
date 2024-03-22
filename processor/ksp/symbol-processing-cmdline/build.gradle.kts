@@ -49,7 +49,7 @@ publishing {
             artifact(project(":compiler-plugin").tasks["dokkaJavadocJar"])
             artifact(project(":compiler-plugin").tasks["sourcesJar"])
             pom {
-                name.set("com.google.devtools.ksp:symbol-processing-cmdline")
+                name.set("io.github.bkmbigo.gallery.ksp:symbol-processing-cmdline")
                 description.set("Symbol processing for K/N and command line")
                 withXml {
                     fun groovy.util.Node.addDependency(
@@ -68,7 +68,7 @@ publishing {
 
                     asNode().appendNode("dependencies").apply {
                         addDependency("org.jetbrains.kotlin", "kotlin-stdlib", kotlinBaseVersion)
-                        addDependency("com.google.devtools.ksp", "symbol-processing-api", version)
+                        addDependency("io.github.bkmbigo.gallery.ksp", "symbol-processing-api", version)
                     }
                 }
             }

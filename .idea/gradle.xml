@@ -10,6 +10,9 @@
               <build path="$PROJECT_DIR$/processor" name="processor">
                 <projects>
                   <project path="$PROJECT_DIR$/processor" />
+                  <project path="$PROJECT_DIR$/processor/api" />
+                  <project path="$PROJECT_DIR$/processor/api/api" />
+                  <project path="$PROJECT_DIR$/processor/api/api-design" />
                   <project path="$PROJECT_DIR$/processor/gradle-plugin" />
                   <project path="$PROJECT_DIR$/processor/processor" />
                 </projects>
@@ -44,6 +47,9 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/processor" />
+            <option value="$PROJECT_DIR$/processor/api" />
+            <option value="$PROJECT_DIR$/processor/api/api" />
+            <option value="$PROJECT_DIR$/processor/api/api-design" />
             <option value="$PROJECT_DIR$/processor/gradle-plugin" />
             <option value="$PROJECT_DIR$/processor/ksp" />
             <option value="$PROJECT_DIR$/processor/ksp/api" />
@@ -60,6 +66,8 @@
             <option value="$PROJECT_DIR$/processor/ksp/test-utils" />
             <option value="$PROJECT_DIR$/processor/processor" />
             <option value="$PROJECT_DIR$/samples" />
+            <option value="$PROJECT_DIR$/samples/android" />
+            <option value="$PROJECT_DIR$/samples/android/single-module" />
             <option value="$PROJECT_DIR$/samples/kmp" />
             <option value="$PROJECT_DIR$/samples/kmp/android-desktop-js-wasmjs" />
             <option value="$PROJECT_DIR$/samples/kmp/android-desktop-js-wasmjs/android" />

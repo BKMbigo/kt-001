@@ -26,5 +26,7 @@ dependencyResolutionManagement {
 
 includeBuild("ksp")
 
+include(":api:api")
+include(":api:api-design")
 include(":processor")
 include(":gradle-plugin")
