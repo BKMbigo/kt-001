@@ -1,7 +1,7 @@
 package com.google.devtools.ksp.processing.impl
 
-import com.google.devtools.ksp.common.AnyChanges
-import com.google.devtools.ksp.common.impl.CodeGeneratorImpl
+import io.github.bkmbigo.gallery.ksp.common.AnyChanges
+import io.github.bkmbigo.gallery.ksp.common.impl.CodeGeneratorImpl
 import com.google.devtools.ksp.processing.Dependencies
 import org.junit.Assert
 import org.junit.Before

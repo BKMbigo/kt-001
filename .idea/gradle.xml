@@ -25,12 +25,10 @@
                   <project path="$PROJECT_DIR$/processor/ksp/common-util" />
                   <project path="$PROJECT_DIR$/processor/ksp/compiler-plugin" />
                   <project path="$PROJECT_DIR$/processor/ksp/gradle-plugin" />
-                  <project path="$PROJECT_DIR$/processor/ksp/integration-tests" />
                   <project path="$PROJECT_DIR$/processor/ksp/kotlin-analysis-api" />
                   <project path="$PROJECT_DIR$/processor/ksp/symbol-processing" />
                   <project path="$PROJECT_DIR$/processor/ksp/symbol-processing-aa-embeddable" />
                   <project path="$PROJECT_DIR$/processor/ksp/symbol-processing-cmdline" />
-                  <project path="$PROJECT_DIR$/processor/ksp/test-utils" />
                 </projects>
               </build>
               <build path="$PROJECT_DIR$/processor/ksp/buildSrc" name="buildSrc">
@@ -58,20 +56,14 @@
             <option value="$PROJECT_DIR$/processor/ksp/common-util" />
             <option value="$PROJECT_DIR$/processor/ksp/compiler-plugin" />
             <option value="$PROJECT_DIR$/processor/ksp/gradle-plugin" />
-            <option value="$PROJECT_DIR$/processor/ksp/integration-tests" />
             <option value="$PROJECT_DIR$/processor/ksp/kotlin-analysis-api" />
             <option value="$PROJECT_DIR$/processor/ksp/symbol-processing" />
             <option value="$PROJECT_DIR$/processor/ksp/symbol-processing-aa-embeddable" />
             <option value="$PROJECT_DIR$/processor/ksp/symbol-processing-cmdline" />
-            <option value="$PROJECT_DIR$/processor/ksp/test-utils" />
             <option value="$PROJECT_DIR$/processor/processor" />
             <option value="$PROJECT_DIR$/samples" />
             <option value="$PROJECT_DIR$/samples/android" />
             <option value="$PROJECT_DIR$/samples/android/single-module" />
-            <option value="$PROJECT_DIR$/samples/kmp" />
-            <option value="$PROJECT_DIR$/samples/kmp/android-desktop-js-wasmjs" />
-            <option value="$PROJECT_DIR$/samples/kmp/android-desktop-js-wasmjs/android" />
-            <option value="$PROJECT_DIR$/samples/kmp/android-desktop-js-wasmjs/common" />
           </set>
         </option>
       </GradleProjectSettings>

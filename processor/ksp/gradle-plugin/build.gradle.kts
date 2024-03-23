@@ -53,8 +53,8 @@ gradlePlugin {
     plugins {
         create("symbol-processing-gradle-plugin") {
             id = "io.github.bkmbigo.gallery.ksp"
-            displayName = "com.google.devtools.ksp.gradle.plugin"
-            implementationClass = "com.google.devtools.ksp.gradle.KspGradleSubplugin"
+            displayName = "io.github.bkmbigo.gallery.ksp.gradle.plugin"
+            implementationClass = "io.github.bkmbigo.gallery.ksp.gradle.KspGradleSubplugin"
             description = "Kotlin symbol processing integration for Gradle"
         }
     }
@@ -154,9 +154,13 @@ abstract class WriteVersionSrcTask @Inject constructor(
 ) : DefaultTask() {
     @TaskAction
     fun generate() {
+
+        logger.info("The KSP version is $kspVersion from gradle")
+
         File(outputSrcDir, "KSPVersions.kt").writeText(
             """
-            package com.google.devtools.ksp.gradle
+            package io.github.bkmbigo.gallery.ksp.gradle
+            
             val KSP_KOTLIN_BASE_VERSION = "$kotlinVersion"
             val KSP_VERSION = "$kspVersion"
             """.trimIndent()

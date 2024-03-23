@@ -1,6 +1,6 @@
 package com.google.devtools.ksp
 
-import com.google.devtools.ksp.common.MemoizedSequence
+import io.github.bkmbigo.gallery.ksp.common.MemoizedSequence
 import org.junit.Assert
 import org.junit.Test
 

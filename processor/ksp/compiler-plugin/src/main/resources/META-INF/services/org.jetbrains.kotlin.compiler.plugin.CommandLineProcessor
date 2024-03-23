@@ -1,1 +1,1 @@
-com.google.devtools.ksp.KotlinSymbolProcessingCommandLineProcessor
+io.github.bkmbigo.gallery.ksp.KotlinSymbolProcessingCommandLineProcessor

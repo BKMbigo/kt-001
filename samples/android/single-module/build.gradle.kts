@@ -4,6 +4,12 @@ plugins {
     id("io.github.bkmbigo.gallery.ksp")
 }
 
+repositories {
+    mavenLocal()
+    google()
+    mavenCentral()
+}
+
 android {
     namespace = "com.github.bkmbigo.gallery"
     compileSdk = 34

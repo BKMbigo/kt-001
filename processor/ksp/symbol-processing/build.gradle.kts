@@ -45,6 +45,7 @@ tasks {
 publishing {
     publications {
         create<MavenPublication>("shadow") {
+            groupId = "io.github.bkmbigo.gallery.ksp"
             artifactId = "symbol-processing"
             artifact(project(":compiler-plugin").tasks["dokkaJavadocJar"])
             artifact(project(":compiler-plugin").tasks["sourcesJar"])

@@ -1,7 +1,6 @@
 import com.google.devtools.ksp.configureMetalava
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-group = "io.github.bkmbigo.gallery.ksp"
 description = "Kotlin Symbol Processing API"
 
 val signingKey: String? by project
@@ -35,6 +34,7 @@ val dokkaJavadocJar by tasks.register<Jar>("dokkaJavadocJar") {
 publishing {
     publications {
         create<MavenPublication>("default") {
+            groupId = "io.github.bkmbigo.gallery.ksp"
             artifactId = "symbol-processing-api"
             from(components["java"])
             artifact(tasks["sourcesJar"])

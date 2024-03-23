@@ -150,12 +150,13 @@ tasks {
 publishing {
     publications {
         create<MavenPublication>("shadow") {
+            groupId = "io.github.bkmbigo.gallery.ksp"
             artifactId = "symbol-processing-aa"
             artifact(tasks["shadowJar"])
             artifact(tasks["dokkaJavadocJar"])
             artifact(tasks["sourcesJar"])
             pom {
-                name.set("com.google.devtools.ksp:symbol-processing-aa")
+                name.set("io.github.bkmbigo.gallery.ksp:symbol-processing-aa")
                 description.set("KSP implementation on Kotlin Analysis API")
                 withXml {
                     fun groovy.util.Node.addDependency(
@@ -174,8 +175,8 @@ publishing {
 
                     asNode().appendNode("dependencies").apply {
                         addDependency("org.jetbrains.kotlin", "kotlin-stdlib", aaKotlinBaseVersion)
-                        addDependency("com.google.devtools.ksp", "symbol-processing-api", version)
-                        addDependency("com.google.devtools.ksp", "symbol-processing-common-deps", version)
+                        addDependency("io.github.bkmbigo.gallery.ksp", "symbol-processing-api", version)
+                        addDependency("io.github.bkmbigo.gallery.ksp", "symbol-processing-common-deps", version)
                     }
                 }
             }

@@ -17,7 +17,8 @@
 
 package com.google.devtools.ksp.gradle.model.builder
 
-import com.google.devtools.ksp.gradle.model.Ksp
+import io.github.bkmbigo.gallery.ksp.gradle.model.Ksp
+import io.github.bkmbigo.gallery.ksp.gradle.model.builder.KspModelBuilder
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test

@@ -40,6 +40,7 @@ val dokkaJavadocJar by tasks.register<Jar>("dokkaJavadocJar") {
 publishing {
     publications {
         create<MavenPublication>("default") {
+            groupId = "io.github.bkmbigo.gallery.ksp"
             artifactId = "symbol-processing-common-deps"
             from(components["java"])
             artifact(tasks["sourcesJar"])

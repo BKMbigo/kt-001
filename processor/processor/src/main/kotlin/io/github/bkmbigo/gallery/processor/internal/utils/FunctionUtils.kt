@@ -1,6 +1,6 @@
 package io.github.bkmbigo.gallery.processor.internal.utils
 
-import com.google.devtools.ksp.symbol.KSFunctionDeclaration
+import io.github.bkmbigo.gallery.ksp.symbol.KSFunctionDeclaration
 import io.github.bkmbigo.gallery.processor.internal.Constants
 
 internal fun KSFunctionDeclaration.isComposable(): Boolean =

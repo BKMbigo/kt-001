@@ -34,6 +34,7 @@ val prefixesToRelocate = listOf(
     "com.github.benmanes.caffeine.",
     "com.google.common.",
     "com.google.devtools.ksp.common.",
+    "io.github.bkmbigo.gallery.ksp.common.",
     "com.google.errorprone.",
     "com.google.gwt.",
     "com.google.j2objc.",
@@ -105,6 +106,7 @@ val validPaths = prefixesToRelocate.map {
     it.second.split('.').filter { it.isNotEmpty() }.joinToString("/")
 } + listOf(
     "com/google/devtools/ksp",
+    "io/github/bkmbigo/gallery/ksp",
     "META-INF",
     "ksp/FirNativeForwardDeclarationGetClassCallChecker.class",
 )
@@ -166,6 +168,7 @@ tasks {
 publishing {
     publications {
         create<MavenPublication>("shadow") {
+            groupId = "io.github.bkmbigo.gallery.ksp"
             artifactId = "symbol-processing-aa-embeddable"
             artifact(project(":kotlin-analysis-api").tasks["dokkaJavadocJar"])
             artifact(tasks["sourcesJar"])

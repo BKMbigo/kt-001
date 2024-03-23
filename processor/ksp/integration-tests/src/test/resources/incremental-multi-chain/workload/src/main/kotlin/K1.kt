@@ -1,2 +1,0 @@
-@NeedsImpl
-interface K1

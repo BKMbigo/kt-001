@@ -9,9 +9,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import io.github.bkmbigo.gallery.GalleryComponent
 
+fun getName() = "Hello"
+
+val savedName = "Hello"
+
 @GalleryComponent
 @Composable
-fun SimpleIconButtonComponent() {
+fun SimpleIconButtonComponent(
+    text: String = getName(),
+    otherText: String = "",
+    savedText: String = savedName,
+    ifText: String = if (true) {
+        savedText
+    } else {
+        "saved"
+    }
+) {
     SimpleIconButton(
         icon = Icons.Default.Add,
         onClick = { /*no-op*/ }

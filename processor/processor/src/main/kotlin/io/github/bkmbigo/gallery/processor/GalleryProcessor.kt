@@ -1,7 +1,8 @@
 package io.github.bkmbigo.gallery.processor
 
-import com.google.devtools.ksp.processing.*
-import com.google.devtools.ksp.symbol.KSAnnotated
+import io.github.bkmbigo.gallery.ksp.processing.*
+import io.github.bkmbigo.gallery.ksp.symbol.KSAnnotated
+import io.github.bkmbigo.gallery.ksp.symbol.KSFunctionDeclaration
 import io.github.bkmbigo.gallery.processor.internal.Constants
 
 class GalleryProcessor(
@@ -12,11 +13,15 @@ class GalleryProcessor(
     override fun process(resolver: Resolver): List<KSAnnotated> {
         resolver
             .getSymbolsWithAnnotation(Constants.Annotations.FQName.GalleryComponent)
-            .forEach { logger.error("@GalleryComponentLocated found", it) }
+            .filterIsInstance<KSFunctionDeclaration>()
+            .forEach {
+                logger.error("""
+                    The node is ${it.simpleName.getShortName()} with parameters
+                        ${it.parameters.joinToString("\n\t") { "Parameter: ${it.name?.getShortName()}\nisCallExpression: ${it.defaultExpression?.isCallExpression}, isNameReferenceElement: ${it.defaultExpression?.isNameReferenceExpression} ,isReferenceElement: ${it.defaultExpression?.isReferenceExpression}\ntext: ${it.defaultExpression?.getExpressionAsString()}" }}
+                """.trimIndent(), it)
+            }
 
-//        throw IllegalArgumentException()
 
-        // We don't postpone any symbols to the next processing round!!!
         return emptyList()
     }
 }

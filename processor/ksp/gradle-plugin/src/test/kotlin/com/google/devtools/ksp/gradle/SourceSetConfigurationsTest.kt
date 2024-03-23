@@ -26,7 +26,7 @@ import com.google.devtools.ksp.processing.Dependencies
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.symbol.KSAnnotated
-import com.google.devtools.ksp.symbol.KSClassDeclaration
+import io.github.bkmbigo.gallery.ksp.symbol.KSClassDeclaration
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
@@ -350,7 +350,7 @@ class SourceSetConfigurationsTest {
         class Processor(val codeGenerator: CodeGenerator) : SymbolProcessor {
             override fun process(resolver: Resolver): List<KSAnnotated> {
                 resolver.getSymbolsWithAnnotation(Suppress::class.qualifiedName!!)
-                    .filterIsInstance<KSClassDeclaration>()
+                    .filterIsInstance<io.github.bkmbigo.gallery.ksp.symbol.KSClassDeclaration>()
                     .forEach {
                         if (it.simpleName.asString() == "InApp") {
                             error("should not run on the app sources")
