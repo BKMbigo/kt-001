@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm")
+    kotlin("plugin.serialization")
 //    id("com.google.devtools.ksp") // Here, we use the official Kotlin Symbol Processing
 }
 
@@ -19,6 +20,8 @@ dependencies {
 //    ksp("dev.zacsweers.autoservice:auto-service-ksp:1.1.0")
 
 //    implementation("com.squareup:kotlinpoet-ksp:1.16.0")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
 
     // Gallery APIs
     implementation("io.github.bkmbigo.gallery:api")
