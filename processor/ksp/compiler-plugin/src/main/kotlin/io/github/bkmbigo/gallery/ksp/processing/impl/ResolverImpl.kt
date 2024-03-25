@@ -52,6 +52,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.*
 import com.intellij.psi.impl.source.PsiClassReferenceType
 import io.github.bkmbigo.gallery.ksp.processing.KSBuiltIns
+import io.github.bkmbigo.gallery.ksp.processing.KSDirectoryOptions
 import io.github.bkmbigo.gallery.ksp.symbol.ClassKind
 import io.github.bkmbigo.gallery.ksp.symbol.Variance
 import org.jetbrains.kotlin.builtins.KotlinBuiltIns
@@ -1129,6 +1130,16 @@ class ResolverImpl(
             override val arrayType: KSType by lazy {
                 getKSTypeCached(builtIns.array.defaultType.replaceArgumentsWithStarProjections())
             }
+        }
+    }
+
+    override val directoryOptions: KSDirectoryOptions by lazy {
+        object: KSDirectoryOptions {
+            override val cachesDir: File = options.cachesDir
+
+            override val kotlinOutputDir: File = options.kotlinOutputDir
+
+            override val resourceOutputDir: File = options.resourceOutputDir
         }
     }
 

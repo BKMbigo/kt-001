@@ -104,7 +104,12 @@ interface Resolver {
     /**
      * Provides built in types for convenience. For example, [KSBuiltins.anyType] is the KSType instance for class 'kotlin.Any'.
      */
-    val builtIns: io.github.bkmbigo.gallery.ksp.processing.KSBuiltIns
+    val builtIns: KSBuiltIns
+
+    /**
+     * The paths passed to KSP
+     * */
+    val directoryOptions: KSDirectoryOptions
 
     /**
      * map a declaration to jvm signature.

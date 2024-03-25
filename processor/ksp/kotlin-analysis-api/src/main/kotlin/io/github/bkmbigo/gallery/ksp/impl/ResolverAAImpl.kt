@@ -48,6 +48,7 @@ import io.github.bkmbigo.gallery.ksp.symbol.*
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiMethod
 import com.intellij.psi.impl.file.impl.JavaFileManager
+import io.github.bkmbigo.gallery.ksp.processing.KSDirectoryOptions
 import org.jetbrains.kotlin.analysis.api.components.buildSubstitutor
 import org.jetbrains.kotlin.analysis.api.fir.types.KtFirType
 import org.jetbrains.kotlin.analysis.api.symbols.KtEnumEntrySymbol
@@ -75,6 +76,7 @@ import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.FqNameUnsafe
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.org.objectweb.asm.Opcodes
+import java.io.File
 
 @OptIn(KspExperimental::class)
 class ResolverAAImpl(
@@ -83,6 +85,7 @@ class ResolverAAImpl(
     val deferredSymbols: Map<SymbolProcessor, List<Restorable>>,
     val project: Project,
     val incrementalContext: IncrementalContextAA,
+    override val directoryOptions: KSDirectoryOptions
 ) : Resolver {
     companion object {
         val instance_prop: ThreadLocal<ResolverAAImpl> = ThreadLocal()

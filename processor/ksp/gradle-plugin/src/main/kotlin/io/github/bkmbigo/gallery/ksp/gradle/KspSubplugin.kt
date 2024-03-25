@@ -76,8 +76,12 @@ class KspGradleSubplugin @Inject internal constructor(private val registry: Tool
         const val KSP_PLUGIN_CLASSPATH_CONFIGURATION_NAME_NON_EMBEDDABLE = "kspPluginClasspathNonEmbeddable"
 
         @JvmStatic
+        fun getMainKspDir(project: Project) =
+            File(project.project.buildDir, "gallery/ksp/")
+
+        @JvmStatic
         fun getKspOutputDir(project: Project, sourceSetName: String, target: String) =
-            File(project.project.buildDir, "generated/ksp/$target/$sourceSetName")
+            File(getMainKspDir(project), "generated/$target/$sourceSetName")
 
         @JvmStatic
         fun getKspClassOutputDir(project: Project, sourceSetName: String, target: String) =
@@ -97,7 +101,7 @@ class KspGradleSubplugin @Inject internal constructor(private val registry: Tool
 
         @JvmStatic
         fun getKspCachesDir(project: Project, sourceSetName: String, target: String) =
-            File(project.project.buildDir, "kspCaches/$target/$sourceSetName")
+            File(getMainKspDir(project), "kspCaches/$target/$sourceSetName")
 
         @JvmStatic
         private fun getSubpluginOptions(

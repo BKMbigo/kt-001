@@ -512,13 +512,23 @@ class KotlinSymbolProcessing(
             val firSession = ResolverAAImpl.ktModule.getFirResolveSession(project)
             firSession.useSiteFirSession.registerResolveComponents(dualLookupTracker)
 
+            val directoryOptions = object: KSDirectoryOptions {
+                override val cachesDir: File = kspConfig.cachesDir
+
+                override val kotlinOutputDir: File = kspConfig.kotlinOutputDir
+
+                override val resourceOutputDir: File = kspConfig.resourceOutputDir
+            }
+
             val resolver = ResolverAAImpl(
                 allDirtyKSFiles,
                 newKSFiles,
                 deferredSymbols,
                 project,
                 incrementalContext,
+                directoryOptions
             )
+
             ResolverAAImpl.instance = resolver
             ResolverAAImpl.instance.functionAsMemberOfCache = mutableMapOf()
             ResolverAAImpl.instance.propertyAsMemberOfCache = mutableMapOf()

@@ -8,10 +8,24 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import io.github.bkmbigo.gallery.GalleryComponent
+import io.github.bkmbigo.gallery.GalleryStatePage
+import io.github.bkmbigo.gallery.GalleryStateRow
+
+class MyClass()
 
 fun getName() = "Hello"
 
 val savedName = "Hello"
+
+@GalleryStateRow<Int>
+@Composable
+fun IntStateComponent(
+    state: Int,
+    onState: (Int) -> Unit,
+    modifier: Modifier = Modifier
+) {
+
+}
 
 @GalleryComponent
 @Composable

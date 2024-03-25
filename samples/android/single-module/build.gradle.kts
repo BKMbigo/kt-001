@@ -72,5 +72,5 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
     implementation("io.github.bkmbigo.gallery:api")
-    ksp("io.github.bkmbigo.gallery:processor")
+    kspDebug("io.github.bkmbigo.gallery:processor")
 }
