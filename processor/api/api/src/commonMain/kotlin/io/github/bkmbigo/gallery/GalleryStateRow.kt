@@ -2,4 +2,6 @@ package io.github.bkmbigo.gallery
 
 @Retention(AnnotationRetention.BINARY)
 @Target(AnnotationTarget.FUNCTION)
-annotation class GalleryStateRow<T>
+annotation class GalleryStateRow<T>(
+    val identifier: String = ""
+)

@@ -35,6 +35,9 @@ abstract class KSVirtualFile(val baseDir: File, val name: String) : KSFile {
     override val filePath: String
         get() = File(baseDir, fileName).path
 
+    override val importDirectives: List<KSImportDirective>
+        get() = throw Exception("Virtual File cannot have imports")
+
     override val packageName: KSName
         get() = throw Exception("$name should not be used.")
 

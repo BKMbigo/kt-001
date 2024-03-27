@@ -13,8 +13,4 @@ internal interface ProcessorEnvironment {
 
     val builtIns: KSBuiltIns
 
-    fun getClassDeclarationByName(name: KSName): KSClassDeclaration?
-
-    fun getKSNameFromString(name: String): KSName
-
 }

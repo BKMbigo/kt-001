@@ -8,5 +8,7 @@ internal data class StateComponentWrapper(
     val fqName: KSName,
     val type: KSType,
     val isDefault: Boolean = true,
-    val identifier: String? = null
+    val identifier: String? = null,
+    val stateParameterName: String,
+    val onStateParameterName: String
 )

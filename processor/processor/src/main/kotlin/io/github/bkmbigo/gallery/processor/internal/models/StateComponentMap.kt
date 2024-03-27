@@ -1,11 +1,8 @@
 package io.github.bkmbigo.gallery.processor.internal.models
 
 import io.github.bkmbigo.gallery.ksp.symbol.*
+import io.github.bkmbigo.gallery.processor.internal.GalleryProcessorException
 import io.github.bkmbigo.gallery.processor.internal.environment.ProcessorEnvironment
-import io.github.bkmbigo.gallery.processor.internal.models.savers.StateComponentMapSaver
-import io.github.bkmbigo.gallery.processor.internal.models.savers.StateComponentWrapperSaver
-import io.github.bkmbigo.gallery.processor.internal.models.savers.symbols.SavedKotlinType
-import io.github.bkmbigo.gallery.processor.internal.models.savers.symbols.toSavedKotlinType
 import io.github.bkmbigo.gallery.processor.internal.models.wrappers.StateComponentWrapper
 import io.github.bkmbigo.gallery.processor.internal.utils.*
 
@@ -14,25 +11,25 @@ import io.github.bkmbigo.gallery.processor.internal.utils.*
 * */
 
 context(ProcessorEnvironment)
-internal class StateComponentMap constructor() {
+internal class StateComponentMap {
 
     /*
     * A type can have several @GalleryStateComponent identified by an identifier
     *  */
-    internal var stateComponentMap: MutableMap<SavedKotlinType, StateComponentTypeList> = mutableMapOf()
+    internal var stateComponentMap: MutableMap<StateComponentType, StateComponentTypeList> = mutableMapOf()
         private set
 
 
     fun addStateComponent(stateComponent: StateComponentWrapper): Boolean {
         val componentType = StateComponentType(stateComponent.type)
 
-        return if (stateComponentMap.containsKey(componentType.toSavedKotlinType())) {
-            stateComponentMap[componentType.toSavedKotlinType()]?.addStateComponent(stateComponent) ?: false
+        return if (stateComponentMap.containsKey(componentType)) {
+            stateComponentMap[componentType]?.addStateComponent(stateComponent) ?: false
         } else {
             val newStateComponentTypeList = StateComponentTypeList(componentType.type)
 
             if (newStateComponentTypeList.addStateComponent(stateComponent)) {
-                stateComponentMap[componentType.toSavedKotlinType()] = newStateComponentTypeList
+                stateComponentMap[componentType] = newStateComponentTypeList
                 true
             } else {
                 false
@@ -41,10 +38,12 @@ internal class StateComponentMap constructor() {
     }
 
     fun retrieveStateComponent(
-        type: KSType
-    ): StateComponentWrapper? {
+        type: KSType,
+        identifier: String? = null
+    ): StateComponentWrapper {
         val stateRetrievalState = recursiveRetrieveStateComponent(
             StateRetrievalState(
+                identifier = identifier,
                 unVisitedTypes = setOf(StateComponentType(type))
             )
         )
@@ -59,7 +58,7 @@ internal class StateComponentMap constructor() {
             * all visitedTypes are considered unresolvable types. Therefore, they can be stored to prevent similar transversal of the tree
             * */
             logger.error("Failed to find a @GalleryStateComponent for the type ${type.declaration.qualifiedName?.asString()}")
-            null
+            throw GalleryProcessorException()
         }
     }
 
@@ -70,7 +69,7 @@ internal class StateComponentMap constructor() {
             val currentType = pastState.unVisitedTypes.first()
             val stack = currentType.superTypes.filterNot { it.isAny || it.isUnit }.toSet() + pastState.unVisitedTypes
 
-            val retrievedStateComponent = retrieveStateComponentForType(currentType)
+            val retrievedStateComponent = retrieveStateComponentForType(currentType, pastState.identifier)
 
             if (retrievedStateComponent != null) {
                 StateRetrievalState(
@@ -108,23 +107,33 @@ internal class StateComponentMap constructor() {
     }
 
     /** Checks whether there is a @GalleryStateComponent for type. ignores supertypes */
-    private fun retrieveStateComponentForType(componentType: StateComponentType, identifier: String? = null, reportErrors: Boolean = false): StateComponentWrapper? {
+    private fun retrieveStateComponentForType(
+        componentType: StateComponentType,
+        identifier: String? = null,
+        reportErrors: Boolean = false
+    ): StateComponentWrapper? {
 
         // All Kotlin classes are descendants of kotlin.Any (Skips mapping for kotlin.Any)
         if (componentType.isAny || componentType.isUnit) {
             // You can argue that at this stage all errors should be reported :)
             if (reportErrors) {
                 logger.error("There are no registered @GalleryStateComponent(s)")
+                throw GalleryProcessorException()
             }
             return null
         }
 
 
-        return if(stateComponentMap.containsKey(componentType.toSavedKotlinType())) {
-            return stateComponentMap[componentType.toSavedKotlinType()]?.retrieveStateComponent(identifier, reportErrors)
+        return if (stateComponentMap.containsKey(componentType)) {
+            return stateComponentMap[componentType]?.retrieveStateComponent(
+                identifier,
+                reportErrors
+            )
         } else {
-            if (reportErrors)
+            if (reportErrors) {
                 logger.error("There are no registered @GalleryStateComponent(s) for the type ${componentType.type.declaration.qualifiedName?.asString()}")
+                throw GalleryProcessorException()
+            }
 
             null
         }
@@ -142,21 +151,23 @@ internal class StateComponentMap constructor() {
     ) {
 
         /* This constructor is only used in the top-most declaration */
-        constructor(type: KSType):this(type, type.isMarkedNullable)
+        constructor(type: KSType) : this(type, type.isMarkedNullable)
 
         /*
         * This calls [KSType.resolve] making it expensive. Call only when needed
         * */
         val superTypes
-            get() = when(val declaration = type.declaration) {
+            get() = when (val declaration = type.declaration) {
                 is KSClassDeclaration -> {
                     // Discuss how to handle value class
                     declaration.superTypes.map { StateComponentType(it.resolve(), isNullable) }
                 }
+
                 is KSTypeAlias -> {
                     val resolvedType = declaration.type.resolve()
                     sequenceOf(StateComponentType(resolvedType, isNullable || resolvedType.isMarkedNullable))
                 }
+
                 else -> emptySequence()
             }
 
@@ -173,12 +184,10 @@ internal class StateComponentMap constructor() {
         context(ProcessorEnvironment)
         val isUnit
             get() = type.isUnit
-
-
-        fun toSavedKotlinType() = type.toSavedKotlinType()
     }
 
     private data class StateRetrievalState(
+        val identifier: String? = null,
         val stateRetrieved: StateComponentWrapper? = null,
         val unVisitedTypes: Set<StateComponentType> = emptySet(),
         val visitedTypes: List<StateComponentType> = emptyList()

@@ -31,16 +31,19 @@ class KSFileJavaImpl private constructor(val psi: PsiJavaFile) : KSFile {
 
     override val origin = Origin.JAVA
 
-    override val location: io.github.bkmbigo.gallery.ksp.symbol.Location by lazy {
+    override val location: Location by lazy {
         psi.toLocation()
     }
-    override val parent: io.github.bkmbigo.gallery.ksp.symbol.KSNode? = null
+    override val parent: KSNode? = null
 
     override val annotations: Sequence<KSAnnotation> = emptySequence()
 
     override val declarations: Sequence<KSDeclaration> by lazy {
         psi.classes.asSequence().map { KSClassDeclarationJavaImpl.getCached(it) }.memoized()
     }
+
+    override val importDirectives: List<KSImportDirective>
+        get() = throw Exception("Not implemented in Java Files")
 
     override val fileName: String by lazy {
         psi.name
@@ -52,7 +55,7 @@ class KSFileJavaImpl private constructor(val psi: PsiJavaFile) : KSFile {
 
     override val packageName: KSName = KSNameImpl.getCached(psi.packageName)
 
-    override fun <D, R> accept(visitor: io.github.bkmbigo.gallery.ksp.symbol.KSVisitor<D, R>, data: D): R {
+    override fun <D, R> accept(visitor: KSVisitor<D, R>, data: D): R {
         return visitor.visitFile(this, data)
     }
 

@@ -32,11 +32,11 @@ class KSFileImpl private constructor(val file: KtFile) : KSFile {
 
     override val origin = Origin.KOTLIN
 
-    override val location: io.github.bkmbigo.gallery.ksp.symbol.Location by lazy {
+    override val location: Location by lazy {
         file.toLocation()
     }
 
-    override val parent: io.github.bkmbigo.gallery.ksp.symbol.KSNode? = null
+    override val parent: KSNode? = null
 
     override val packageName: KSName by lazy {
         KSNameImpl.getCached(file.packageFqName.asString())
@@ -58,7 +58,11 @@ class KSFileImpl private constructor(val file: KtFile) : KSFile {
         file.virtualFilePath
     }
 
-    override fun <D, R> accept(visitor: io.github.bkmbigo.gallery.ksp.symbol.KSVisitor<D, R>, data: D): R {
+    override val importDirectives: List<KSImportDirective> by lazy {
+        file.importDirectives.map { KSImportDirectiveImpl.getCached(it) }
+    }
+
+    override fun <D, R> accept(visitor: KSVisitor<D, R>, data: D): R {
         return visitor.visitFile(this, data)
     }
 

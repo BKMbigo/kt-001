@@ -10,16 +10,11 @@ import kotlin.contracts.contract
 
 internal class ProcessorEnvironmentImpl(
     override val logger: KSPLogger,
-    val resolver: Resolver
+    private val resolver: Resolver
 ): ProcessorEnvironment {
     override val builtIns: KSBuiltIns by lazy {
-
         resolver.builtIns
     }
-
-    override fun getClassDeclarationByName(name: KSName): KSClassDeclaration? = resolver.getClassDeclarationByName(name)
-
-    override fun getKSNameFromString(name: String): KSName = resolver.getKSNameFromString(name)
 
 }
 

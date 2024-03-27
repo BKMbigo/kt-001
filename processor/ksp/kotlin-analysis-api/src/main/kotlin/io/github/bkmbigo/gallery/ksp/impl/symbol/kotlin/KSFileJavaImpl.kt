@@ -19,12 +19,8 @@ package io.github.bkmbigo.gallery.ksp.impl.symbol.kotlin
 
 import io.github.bkmbigo.gallery.ksp.common.KSObjectCache
 import io.github.bkmbigo.gallery.ksp.common.impl.KSNameImpl
-import io.github.bkmbigo.gallery.ksp.symbol.KSAnnotation
-import io.github.bkmbigo.gallery.ksp.symbol.KSDeclaration
-import io.github.bkmbigo.gallery.ksp.symbol.KSFile
-import io.github.bkmbigo.gallery.ksp.symbol.KSName
-import io.github.bkmbigo.gallery.ksp.symbol.Origin
 import com.intellij.psi.PsiJavaFile
+import io.github.bkmbigo.gallery.ksp.symbol.*
 
 class KSFileJavaImpl private constructor(val psi: PsiJavaFile) : KSFile, Deferrable {
     companion object : KSObjectCache<PsiJavaFile, KSFileJavaImpl>() {
@@ -44,6 +40,9 @@ class KSFileJavaImpl private constructor(val psi: PsiJavaFile) : KSFile, Deferra
             }
         }
     }
+
+    override val importDirectives: List<KSImportDirective>
+        get() = throw Exception("Not implemented in Java files")
 
     override val origin: Origin = Origin.JAVA
 

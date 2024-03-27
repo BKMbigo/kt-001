@@ -8,7 +8,15 @@ val KSType.isAny
     get() = this == builtIns.anyType
 
 context(ProcessorEnvironment)
+val KSType?.isAny
+    get() = this == builtIns.anyType
+
+context(ProcessorEnvironment)
 val KSType.isUnit
+    get() = this == builtIns.unitType
+
+context(ProcessorEnvironment)
+val KSType?.isUnit
     get() = this == builtIns.unitType
 
 context(ProcessorEnvironment)

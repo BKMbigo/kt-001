@@ -2,9 +2,11 @@ package io.github.bkmbigo.gallery.processor.internal.verifiers
 
 import io.github.bkmbigo.gallery.ksp.symbol.KSFunctionDeclaration
 import io.github.bkmbigo.gallery.processor.internal.Constants
+import io.github.bkmbigo.gallery.processor.internal.GalleryProcessorException
 import io.github.bkmbigo.gallery.processor.internal.environment.ProcessorEnvironment
 import io.github.bkmbigo.gallery.processor.internal.models.wrappers.StateComponentWrapper
 import io.github.bkmbigo.gallery.processor.internal.utils.isComposable
+import io.github.bkmbigo.gallery.processor.internal.utils.isTopLevelFunction
 import io.github.bkmbigo.gallery.processor.internal.utils.isUnit
 
 context(ProcessorEnvironment)
@@ -12,6 +14,11 @@ internal fun KSFunctionDeclaration.processStateComponent(): StateComponentWrappe
 
     if (!isComposable()) {
         logger.error("@GalleryStateComponent can only be applied to @Composable functions", this)
+    }
+
+    if (!isTopLevelFunction()){
+        logger.error("@GalleryStateComponent can only be applied to a top level function")
+        throw GalleryProcessorException()
     }
 
     /*
@@ -84,7 +91,9 @@ internal fun KSFunctionDeclaration.processStateComponent(): StateComponentWrappe
         fqName = this.qualifiedName!!,
         type = stateComponentType!!,
         isDefault = true,
-        identifier = null
+        identifier = null,
+        stateParameterName = stateParameters.first().first.name!!.getShortName(),
+        onStateParameterName = onStateParameters.first().first.name!!.getShortName()
     )
 
 }

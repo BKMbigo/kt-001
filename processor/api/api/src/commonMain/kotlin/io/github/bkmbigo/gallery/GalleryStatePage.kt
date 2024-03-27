@@ -3,4 +3,6 @@ package io.github.bkmbigo.gallery
 @Retention(AnnotationRetention.BINARY)
 @Target(AnnotationTarget.FUNCTION)
 @GalleryStateComponent
-annotation class GalleryStatePage<T>
+annotation class GalleryStatePage<T>(
+    val identifier: String = ""
+)

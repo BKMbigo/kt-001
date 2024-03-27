@@ -19,18 +19,15 @@ package io.github.bkmbigo.gallery.ksp.impl.symbol.kotlin
 
 import io.github.bkmbigo.gallery.ksp.common.KSObjectCache
 import io.github.bkmbigo.gallery.ksp.common.impl.KSNameImpl
-import io.github.bkmbigo.gallery.ksp.symbol.KSAnnotation
-import io.github.bkmbigo.gallery.ksp.symbol.KSDeclaration
-import io.github.bkmbigo.gallery.ksp.symbol.KSFile
-import io.github.bkmbigo.gallery.ksp.symbol.KSName
-import io.github.bkmbigo.gallery.ksp.symbol.Origin
 import com.intellij.psi.PsiFile
+import io.github.bkmbigo.gallery.ksp.symbol.*
 import org.jetbrains.kotlin.analysis.api.symbols.KtFileSymbol
 import org.jetbrains.kotlin.analysis.api.symbols.KtFunctionSymbol
 import org.jetbrains.kotlin.analysis.api.symbols.KtNamedClassOrObjectSymbol
 import org.jetbrains.kotlin.analysis.api.symbols.KtPropertySymbol
 import org.jetbrains.kotlin.analysis.api.symbols.KtTypeAliasSymbol
 import org.jetbrains.kotlin.psi.KtFile
+import org.jetbrains.kotlin.psi.KtImportDirective
 
 class KSFileImpl private constructor(private val ktFileSymbol: KtFileSymbol) : KSFile, Deferrable {
     companion object : KSObjectCache<KtFileSymbol, KSFileImpl>() {
@@ -69,15 +66,24 @@ class KSFileImpl private constructor(private val ktFileSymbol: KtFileSymbol) : K
         }
     }
 
+    override val importDirectives: List<KSImportDirective> by lazy {
+        analyze {
+            when (psi) {
+                is KtFile -> (psi as KtFile).importDirectives.map { KSImportDirectiveImpl.getCached(it) }
+                else -> emptyList()
+            }
+        }
+    }
+
     override val origin: Origin = Origin.KOTLIN
 
-    override val location: io.github.bkmbigo.gallery.ksp.symbol.Location by lazy {
+    override val location: Location by lazy {
         ktFileSymbol.psi.toLocation()
     }
 
-    override val parent: io.github.bkmbigo.gallery.ksp.symbol.KSNode? = null
+    override val parent: KSNode? = null
 
-    override fun <D, R> accept(visitor: io.github.bkmbigo.gallery.ksp.symbol.KSVisitor<D, R>, data: D): R {
+    override fun <D, R> accept(visitor: KSVisitor<D, R>, data: D): R {
         return visitor.visitFile(this, data)
     }
 

@@ -34,4 +34,9 @@ interface KSFile : KSDeclarationContainer, KSAnnotated {
      * Absolute path of this source file.
      */
     val filePath: String
+
+    /**
+     * Imports in the file
+     * */
+    val importDirectives: List<KSImportDirective>
 }

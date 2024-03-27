@@ -1,5 +1,6 @@
 package io.github.bkmbigo.gallery.processor.internal
 
+import io.github.bkmbigo.gallery.GalleryComponentTheme as GalleryComponentThemeAnnotation
 import io.github.bkmbigo.gallery.GalleryScreen as GalleryScreenAnnotation
 import io.github.bkmbigo.gallery.GalleryPageRow as GalleryPageRowAnnotation
 import io.github.bkmbigo.gallery.GalleryMultiSelectablePage as GalleryMultiSelectablePageAnnotation
@@ -20,6 +21,7 @@ internal object Constants {
             val GalleryStatePage = GalleryStatePageAnnotation::class.simpleName!!
             val GalleryStateRow = GalleryStateRowAnnotation::class.simpleName!!
             val GalleryStateParameter = GalleryStateParameterAnnotation::class.simpleName!!
+            val GalleryComponentTheme = GalleryComponentThemeAnnotation::class.simpleName!!
 
             // Design Annotations
             val GallerySingleSelectablePage = GallerySingleSelectablePageAnnotation::class.simpleName!!
@@ -37,6 +39,7 @@ internal object Constants {
             val GalleryStatePage = GalleryStatePageAnnotation::class.qualifiedName!!
             val GalleryStateRow = GalleryStateRowAnnotation::class.qualifiedName!!
             val GalleryStateParameter = GalleryStateParameterAnnotation::class.qualifiedName!!
+            val GalleryComponentTheme = GalleryComponentThemeAnnotation::class.qualifiedName!!
 
             // Design Annotations
             val GallerySingleSelectablePage = GallerySingleSelectablePageAnnotation::class.qualifiedName!!
