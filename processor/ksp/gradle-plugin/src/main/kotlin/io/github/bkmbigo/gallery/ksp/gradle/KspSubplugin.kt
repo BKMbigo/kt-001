@@ -400,7 +400,7 @@ class KspGradleSubplugin @Inject internal constructor(private val registry: Tool
             )
         }
 
-        val isIncremental = project.findProperty("ksp.incremental")?.toString()?.toBoolean() ?: true
+        val isIncremental = project.findProperty("ksp.incremental")?.toString()?.toBoolean() ?: false
         val isIntermoduleIncremental =
             (project.findProperty("ksp.incremental.intermodule")?.toString()?.toBoolean() ?: true) && isIncremental
         val useKSP2 = project.findProperty("ksp.useKSP2")?.toString()?.toBoolean() ?: false
