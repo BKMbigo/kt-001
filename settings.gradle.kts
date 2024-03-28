@@ -32,6 +32,8 @@ rootProject.name = "GallerySample"
 
 includeBuild("processor")
 
+includeBuild("ksp")
+
 include(":samples:android:single-module")
 //include(":samples:kmp:android-desktop-js-wasmjs:android")
 //include(":samples:kmp:android-desktop-js-wasmjs:common")

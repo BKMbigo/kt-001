@@ -7,6 +7,25 @@
         <compositeConfiguration>
           <compositeBuild compositeDefinitionSource="SCRIPT">
             <builds>
+              <build path="$PROJECT_DIR$/ksp" name="ksp">
+                <projects>
+                  <project path="$PROJECT_DIR$/ksp" />
+                  <project path="$PROJECT_DIR$/ksp/api" />
+                  <project path="$PROJECT_DIR$/ksp/common-deps" />
+                  <project path="$PROJECT_DIR$/ksp/common-util" />
+                  <project path="$PROJECT_DIR$/ksp/compiler-plugin" />
+                  <project path="$PROJECT_DIR$/ksp/gradle-plugin" />
+                  <project path="$PROJECT_DIR$/ksp/kotlin-analysis-api" />
+                  <project path="$PROJECT_DIR$/ksp/symbol-processing" />
+                  <project path="$PROJECT_DIR$/ksp/symbol-processing-aa-embeddable" />
+                  <project path="$PROJECT_DIR$/ksp/symbol-processing-cmdline" />
+                </projects>
+              </build>
+              <build path="$PROJECT_DIR$/ksp/buildSrc" name="buildSrc">
+                <projects>
+                  <project path="$PROJECT_DIR$/ksp/buildSrc" />
+                </projects>
+              </build>
               <build path="$PROJECT_DIR$/processor" name="processor">
                 <projects>
                   <project path="$PROJECT_DIR$/processor" />
@@ -17,25 +36,6 @@
                   <project path="$PROJECT_DIR$/processor/processor" />
                 </projects>
               </build>
-              <build path="$PROJECT_DIR$/processor/ksp" name="ksp">
-                <projects>
-                  <project path="$PROJECT_DIR$/processor/ksp" />
-                  <project path="$PROJECT_DIR$/processor/ksp/api" />
-                  <project path="$PROJECT_DIR$/processor/ksp/common-deps" />
-                  <project path="$PROJECT_DIR$/processor/ksp/common-util" />
-                  <project path="$PROJECT_DIR$/processor/ksp/compiler-plugin" />
-                  <project path="$PROJECT_DIR$/processor/ksp/gradle-plugin" />
-                  <project path="$PROJECT_DIR$/processor/ksp/kotlin-analysis-api" />
-                  <project path="$PROJECT_DIR$/processor/ksp/symbol-processing" />
-                  <project path="$PROJECT_DIR$/processor/ksp/symbol-processing-aa-embeddable" />
-                  <project path="$PROJECT_DIR$/processor/ksp/symbol-processing-cmdline" />
-                </projects>
-              </build>
-              <build path="$PROJECT_DIR$/processor/ksp/buildSrc" name="buildSrc">
-                <projects>
-                  <project path="$PROJECT_DIR$/processor/ksp/buildSrc" />
-                </projects>
-              </build>
             </builds>
           </compositeBuild>
         </compositeConfiguration>
@@ -44,22 +44,22 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/ksp" />
+            <option value="$PROJECT_DIR$/ksp/api" />
+            <option value="$PROJECT_DIR$/ksp/buildSrc" />
+            <option value="$PROJECT_DIR$/ksp/common-deps" />
+            <option value="$PROJECT_DIR$/ksp/common-util" />
+            <option value="$PROJECT_DIR$/ksp/compiler-plugin" />
+            <option value="$PROJECT_DIR$/ksp/gradle-plugin" />
+            <option value="$PROJECT_DIR$/ksp/kotlin-analysis-api" />
+            <option value="$PROJECT_DIR$/ksp/symbol-processing" />
+            <option value="$PROJECT_DIR$/ksp/symbol-processing-aa-embeddable" />
+            <option value="$PROJECT_DIR$/ksp/symbol-processing-cmdline" />
             <option value="$PROJECT_DIR$/processor" />
             <option value="$PROJECT_DIR$/processor/api" />
             <option value="$PROJECT_DIR$/processor/api/api" />
             <option value="$PROJECT_DIR$/processor/api/api-design" />
             <option value="$PROJECT_DIR$/processor/gradle-plugin" />
-            <option value="$PROJECT_DIR$/processor/ksp" />
-            <option value="$PROJECT_DIR$/processor/ksp/api" />
-            <option value="$PROJECT_DIR$/processor/ksp/buildSrc" />
-            <option value="$PROJECT_DIR$/processor/ksp/common-deps" />
-            <option value="$PROJECT_DIR$/processor/ksp/common-util" />
-            <option value="$PROJECT_DIR$/processor/ksp/compiler-plugin" />
-            <option value="$PROJECT_DIR$/processor/ksp/gradle-plugin" />
-            <option value="$PROJECT_DIR$/processor/ksp/kotlin-analysis-api" />
-            <option value="$PROJECT_DIR$/processor/ksp/symbol-processing" />
-            <option value="$PROJECT_DIR$/processor/ksp/symbol-processing-aa-embeddable" />
-            <option value="$PROJECT_DIR$/processor/ksp/symbol-processing-cmdline" />
             <option value="$PROJECT_DIR$/processor/processor" />
             <option value="$PROJECT_DIR$/samples" />
             <option value="$PROJECT_DIR$/samples/android" />

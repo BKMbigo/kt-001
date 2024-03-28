@@ -19,12 +19,6 @@ internal fun KSFunctionDeclaration.processComponentTheme(): ComponentThemeWrappe
     }
 
 
-    if (!isTopLevelFunction()){
-        logger.error("@GalleryComponent can only be applied to a top level function")
-        throw GalleryProcessorException()
-    }
-
-
     if (isPrivate()) {
         logger.error("@GalleryComponentTheme can not be applied to @Composable functions.", this)
         throw GalleryProcessorException()

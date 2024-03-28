@@ -14,10 +14,6 @@ internal fun KSFunctionDeclaration.processStateComponent(): StateComponentWrappe
 
     if (!isComposable()) {
         logger.error("@GalleryStateComponent can only be applied to @Composable functions", this)
-    }
-
-    if (!isTopLevelFunction()){
-        logger.error("@GalleryStateComponent can only be applied to a top level function")
         throw GalleryProcessorException()
     }
 

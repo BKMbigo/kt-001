@@ -169,7 +169,7 @@ class KspGradleSubplugin @Inject internal constructor(private val registry: Tool
     private lateinit var kspConfigurations: KspConfigurations
 
     override fun apply(target: Project) {
-        target.extensions.create("ksp", KspExtension::class.java)
+        target.extensions.create("galleryKsp", KspExtension::class.java)
         kspConfigurations = KspConfigurations(target)
         registry.register(KspModelBuilder())
     }
@@ -184,13 +184,13 @@ class KspGradleSubplugin @Inject internal constructor(private val registry: Tool
         if (!noVersionCheck) {
             if (kspVersion < kotlinVersion) {
                 project.logger.warn(
-                    "ksp-$KSP_VERSION is too old for kotlin-$kotlinVersion. " +
-                        "Please upgrade ksp or downgrade kotlin-gradle-plugin to $KSP_KOTLIN_BASE_VERSION."
+                    "galleryKsp-$KSP_VERSION is too old for kotlin-$kotlinVersion. " +
+                        "Please upgrade galleryKsp or downgrade kotlin-gradle-plugin to $KSP_KOTLIN_BASE_VERSION."
                 )
             }
             if (kspVersion > kotlinVersion) {
                 project.logger.warn(
-                    "ksp-$KSP_VERSION is too new for kotlin-$kotlinVersion. " +
+                    "galleryKsp-$KSP_VERSION is too new for kotlin-$kotlinVersion. " +
                         "Please upgrade kotlin-gradle-plugin to $KSP_KOTLIN_BASE_VERSION."
                 )
             }
@@ -264,7 +264,7 @@ class KspGradleSubplugin @Inject internal constructor(private val registry: Tool
         val processingModel = project.findProperty("ksp.experimental.processing.model")?.toString() ?: "traditional"
 
         assert(kotlinCompileProvider.name.startsWith("compile"))
-        val kspTaskName = kotlinCompileProvider.name.replaceFirst("compile", "ksp")
+        val kspTaskName = kotlinCompileProvider.name.replaceFirst("compile", "galleryKsp")
 
         val processorClasspath = project.configurations.maybeCreate("${kspTaskName}ProcessorClasspath")
             .extendsFrom(*nonEmptyKspConfigurations.toTypedArray()).markResolvable()

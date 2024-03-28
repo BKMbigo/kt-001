@@ -24,7 +24,6 @@ dependencyResolutionManagement {
     }
 }
 
-includeBuild("ksp")
 
 include(":api:api")
 include(":api:api-design")

@@ -18,11 +18,6 @@ internal fun KSFunctionDeclaration.processScreenComponent(): ScreenComponentWrap
         throw GalleryProcessorException()
     }
 
-    if (!isTopLevelFunction()){
-        logger.error("@GalleryScreen can only be applied to a top level function")
-        throw GalleryProcessorException()
-    }
-
     if (isPrivate()) {
         logger.error(
             "@GalleryScreen cannot be applied to private functions as they are not accessible from other files",

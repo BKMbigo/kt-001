@@ -17,11 +17,6 @@ internal fun KSFunctionDeclaration.processComponent(): ComponentWrapper {
         throw GalleryProcessorException()
     }
 
-    if (!isTopLevelFunction()){
-        logger.error("@GalleryComponent can only be applied to a top level function")
-        throw GalleryProcessorException()
-    }
-
     if (isPrivate()) {
         logger.error("@GalleryComponent cannot be applied to private functions", this)
         throw GalleryProcessorException()

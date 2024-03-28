@@ -13,7 +13,7 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinJvmAndroidCompilation
  */
 class KspConfigurations(private val project: Project) {
     companion object {
-        private const val PREFIX = "ksp"
+        private const val PREFIX = "galleryKsp"
     }
 
     private val allowAllTargetConfiguration =

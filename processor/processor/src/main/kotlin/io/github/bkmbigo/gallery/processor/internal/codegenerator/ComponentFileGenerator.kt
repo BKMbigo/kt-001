@@ -55,7 +55,7 @@ internal fun generateComponentScreenFunction(
         |// This is the function that is used to display the component ${componentMatched.fqName.asString()}
         |@Composable
         |fun $screenComponentFunctionName(
-        |   $screenParameters${onNavigateBackParameter?.let { ",\n\t$it" } ?: ""}
+        |   $screenParameters${onNavigateBackParameter?.let { "\n\t$it" } ?: ""}
         |) {
         |
         |   // State

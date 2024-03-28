@@ -5,9 +5,9 @@ plugins {
 }
 
 repositories {
-    mavenLocal()
     google()
     mavenCentral()
+    mavenLocal()
 }
 
 android {
@@ -72,5 +72,5 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
     implementation("io.github.bkmbigo.gallery:api")
-    kspDebug("io.github.bkmbigo.gallery:processor")
+//    galleryKspDebug("io.github.bkmbigo.gallery:processor")
 }
