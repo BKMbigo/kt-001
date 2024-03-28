@@ -67,9 +67,9 @@ internal class StateComponentMap {
     ): StateRetrievalState {
         return if (pastState.unVisitedTypes.isNotEmpty()) {
             val currentType = pastState.unVisitedTypes.first()
-            logger.warn("recursiveRetrieveStateComponent called for type ${currentType.type.declaration.qualifiedName?.asString() ?: "Unidentified"}")
+//            logger.error("recursiveRetrieveStateComponent called for type ${currentType.type.declaration.qualifiedName?.asString() ?: "Unidentified"}")
 
-            val stack = currentType.superTypes.filterNot { it.isAny || it.isUnit }.toSet() + pastState.unVisitedTypes
+            val stack = (currentType.superTypes.toSet() + pastState.unVisitedTypes.drop(1)).filterNot { it.isAny || it.isUnit }.toSet()
 
             val retrievedStateComponent = retrieveStateComponentForType(currentType, pastState.identifier)
 

@@ -50,8 +50,6 @@ internal fun KSFunctionDeclaration.processStateComponent(): StateComponentWrappe
 
     val stateComponentType = stateComponentAnnotation.annotationType.element?.typeArguments?.firstOrNull()?.type?.resolve()
 
-    logger.error("The @GalleryStateComponent has a type of ${stateComponentType?.declaration?.qualifiedName?.asString()}")
-
     val paramTypes = parameters.map { it to it.type.resolve() }
 
     // Search for 'state' parameters

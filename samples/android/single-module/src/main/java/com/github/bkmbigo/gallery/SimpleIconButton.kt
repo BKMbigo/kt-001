@@ -47,9 +47,7 @@ fun SimpleIconButton(
 @GalleryComponent
 @Composable
 fun SimpleIconButtonComponent(
-    text: String = "",
-    otherText: String = "",
-    savedText: String = ""
+    text: Int = 0
 ) {
     SimpleIconButton(
         icon = Icons.Default.Add,
