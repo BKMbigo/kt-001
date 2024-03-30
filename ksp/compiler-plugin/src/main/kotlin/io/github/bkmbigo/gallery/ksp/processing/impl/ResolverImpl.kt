@@ -52,7 +52,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.*
 import com.intellij.psi.impl.source.PsiClassReferenceType
 import io.github.bkmbigo.gallery.ksp.processing.KSBuiltIns
-import io.github.bkmbigo.gallery.ksp.processing.KSDirectoryOptions
+import io.github.bkmbigo.gallery.ksp.processing.GalleryKSOptions
 import io.github.bkmbigo.gallery.ksp.symbol.ClassKind
 import io.github.bkmbigo.gallery.ksp.symbol.Variance
 import org.jetbrains.kotlin.builtins.KotlinBuiltIns
@@ -129,7 +129,7 @@ class ResolverImpl(
     val options: KspOptions,
 ) : Resolver {
     val psiDocumentManager = PsiDocumentManager.getInstance(project)
-    private val nameToKSMap: MutableMap<KSName, io.github.bkmbigo.gallery.ksp.symbol.KSClassDeclaration>
+    private val nameToKSMap: MutableMap<KSName, KSClassDeclaration>
     private val javaTypeParameterMap: MutableMap<LazyJavaTypeParameterDescriptor, PsiTypeParameter> = mutableMapOf()
     private val packageInfoFiles by lazy {
         allKSFiles.filter { it.fileName == "package-info.java" }.asSequence().memoized()
@@ -1133,8 +1133,12 @@ class ResolverImpl(
         }
     }
 
-    override val directoryOptions: KSDirectoryOptions by lazy {
-        object: KSDirectoryOptions {
+    override val galleryKSOptions: GalleryKSOptions by lazy {
+        object: GalleryKSOptions {
+            override val isGalleryConfiguration: Boolean = true
+
+            override val modulePackageName: String = ""
+
             override val cachesDir: File = options.cachesDir
 
             override val kotlinOutputDir: File = options.kotlinOutputDir

@@ -101,10 +101,40 @@ internal fun KSFunctionDeclaration.processScreenComponent(): ScreenComponentWrap
         hasOnNavigateBackParameter = false
     }
 
+    val hasThemeStateComponentsParameter: Boolean
+
+    // Check for optional parameter `onNavigateBack`
+    val themeStateComponentsParameters = parameters.filter { it.name?.getShortName() == "themeStateComponents" }
+
+    if (themeStateComponentsParameters.isNotEmpty()) {
+        val themeStateComponentsParameter = themeStateComponentsParameters.first()
+
+        val themeStateComponentsParameterType = themeStateComponentsParameter.type.resolve()
+
+        if (!themeStateComponentsParameterType.isFunctionType) {
+            logger.error("@GalleryScreen cannot have a parameter `themeStateComponents` that is not the type (@Composable () -> Unit)", this)
+            throw GalleryProcessorException()
+        } else if (!themeStateComponentsParameterType.annotations.any { it.shortName.getShortName() == "Composable" }) {
+            logger.error("@GalleryScreen the parameter `themeStateComponents` has to be a @Composable lambda", this)
+            throw GalleryProcessorException()
+        } else if (themeStateComponentsParameter.type.element?.typeArguments?.size != 1) {
+            logger.error("@GalleryScreen cannot have a parameter `themeStateComponents` that is not the type (@Composable () -> Unit). Has more type arguments", this)
+            throw GalleryProcessorException()
+        } else if (themeStateComponentsParameter.type.element?.typeArguments?.getOrNull(0)?.type?.resolve()?.isUnit != true) {
+            logger.error("@GalleryScreen cannot have a parameter `themeStateComponents` that is not the type (@Composable () -> Unit)", this)
+            throw GalleryProcessorException()
+        }
+
+        hasThemeStateComponentsParameter = true
+    } else {
+        hasThemeStateComponentsParameter = false
+    }
+
     return ScreenComponentWrapper(
         fqName = qualifiedName!!,
         componentParameterName = "component",
         stateComponentsParameterName = "stateComponents",
+        themeStateComponentsParameterName = if (hasThemeStateComponentsParameter) "themeStateComponents" else null,
         onNavigateBackParameterName = if (hasOnNavigateBackParameter) "onNavigateBack" else null
     )
 

@@ -47,6 +47,8 @@ internal fun generateComponentScreenFunction(
         addImport("androidx.compose.runtime.Composable")
     }
 
+    val themeStateComponentArgument = "themeStateComponents: @Composable () -> Unit = {},"
+
     return """|
         |package $packageName
         |
@@ -55,7 +57,9 @@ internal fun generateComponentScreenFunction(
         |// This is the function that is used to display the component ${componentMatched.fqName.asString()}
         |@Composable
         |fun $screenComponentFunctionName(
-        |   $screenParameters${onNavigateBackParameter?.let { "\n\t$it" } ?: ""}
+        |   ${onNavigateBackParameter?.let { "\n\t$it," } ?: ""}
+        |   $screenParameters
+        |   $themeStateComponentArgument
         |) {
         |
         |   // State
@@ -127,14 +131,22 @@ private fun generateGalleryScreenCallee(
         """.trimMargin()
     }
 
+    val themeStateArgument = screenComponent.themeStateComponentsParameterName?.let { themeStateComponentsParameterName ->
+        """|$themeStateComponentsParameterName = {
+            |   themeStateComponents()
+            |}
+        """.trimMargin()
+    }
+
     return """|
         |$screenComponentName(
+        |   ${onNavigateBackParameter?.let { "$it," } ?: ""}
         |   $componentParameterName = {
         |       ${componentMatched.generateGalleryComponentCallee()}
         |   },
         |   $stateComponentsParameterName = {
         |       $stateComponentParameters
-        |   }${onNavigateBackParameter?.let { ",\n\t$it" } ?: ""}
+        |   }${themeStateArgument?.let { ",\n\t$it" } ?: ""}
         |)
     """.trimMargin()
 }

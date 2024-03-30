@@ -48,7 +48,7 @@ import io.github.bkmbigo.gallery.ksp.symbol.*
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiMethod
 import com.intellij.psi.impl.file.impl.JavaFileManager
-import io.github.bkmbigo.gallery.ksp.processing.KSDirectoryOptions
+import io.github.bkmbigo.gallery.ksp.processing.GalleryKSOptions
 import org.jetbrains.kotlin.analysis.api.components.buildSubstitutor
 import org.jetbrains.kotlin.analysis.api.fir.types.KtFirType
 import org.jetbrains.kotlin.analysis.api.symbols.KtEnumEntrySymbol
@@ -85,7 +85,7 @@ class ResolverAAImpl(
     val deferredSymbols: Map<SymbolProcessor, List<Restorable>>,
     val project: Project,
     val incrementalContext: IncrementalContextAA,
-    override val directoryOptions: KSDirectoryOptions
+    override val galleryKSOptions: GalleryKSOptions
 ) : Resolver {
     companion object {
         val instance_prop: ThreadLocal<ResolverAAImpl> = ThreadLocal()

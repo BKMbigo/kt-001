@@ -1,16 +1,11 @@
 package com.github.bkmbigo.gallery
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -29,17 +24,30 @@ import io.github.bkmbigo.gallery.GalleryStateRow
 
 
 // This is the component we want to add to our gallery
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SimpleIconButton(
-    icon: ImageVector,
+fun SimpleProfileCard(
+    name: String,
+    age: Int,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    IconButton(
+    ElevatedCard(
+        modifier = modifier,
         onClick = onClick,
-        modifier = modifier
+        shape = RoundedCornerShape(12.dp)
     ) {
-        Icon(icon, contentDescription = null)
+        Column {
+            Text(
+                text = "Name: $name"
+            )
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            Text(
+                text = "Age: $age"
+            )
+        }
     }
 }
 
@@ -47,47 +55,11 @@ fun SimpleIconButton(
 @GalleryComponent
 @Composable
 fun SimpleIconButtonComponent(
-    text: Int = 0
+    age: Int = 0
 ) {
-    SimpleIconButton(
-        icon = Icons.Default.Add,
-        onClick = { /*no-op*/ }
+    SimpleProfileCard(
+        name = "James",
+        age = age,
+        onClick = { /*TODO*/ }
     )
-}
-
-
-// This is a @GalleryStateComponent. It is used to change Int parameters on Components
-@GalleryStateRow<Int>
-@Composable
-fun IntStateComponent(
-    state: Int,
-    onState: (Int) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val intText by rememberSaveable(state, stateSaver = TextFieldValue.Saver) {
-        mutableStateOf(TextFieldValue(state.toString()))
-    }
-
-    Row(
-        modifier = modifier,
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(text = "Int")
-
-        Spacer(modifier = Modifier.width((4.dp)))
-
-        OutlinedTextField(
-            value = intText,
-            onValueChange = { newValue ->
-                // Try converting to Int
-                newValue.text.toIntOrNull()?.let {
-                    onState(it)
-                }
-            },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Number
-            )
-        )
-    }
 }

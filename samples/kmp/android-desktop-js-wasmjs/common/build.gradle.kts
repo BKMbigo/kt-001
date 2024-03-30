@@ -5,6 +5,12 @@ plugins {
     id("io.github.bkmbigo.gallery.ksp")
 }
 
+repositories {
+    mavenCentral()
+    google()
+    mavenLocal()
+}
+
 kotlin {
     androidTarget()
     jvm("desktop")
@@ -54,7 +60,7 @@ android {
 
 dependencies {
     add(
-        "ksp",
+        "galleryKsp",
         "io.github.bkmbigo.gallery:processor"
     )
 }

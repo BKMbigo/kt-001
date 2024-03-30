@@ -64,6 +64,12 @@
             <option value="$PROJECT_DIR$/samples" />
             <option value="$PROJECT_DIR$/samples/android" />
             <option value="$PROJECT_DIR$/samples/android/single-module" />
+            <option value="$PROJECT_DIR$/samples/desktop" />
+            <option value="$PROJECT_DIR$/samples/desktop/single-module" />
+            <option value="$PROJECT_DIR$/samples/kmp" />
+            <option value="$PROJECT_DIR$/samples/kmp/android-desktop-js-wasmjs" />
+            <option value="$PROJECT_DIR$/samples/kmp/android-desktop-js-wasmjs/android" />
+            <option value="$PROJECT_DIR$/samples/kmp/android-desktop-js-wasmjs/common" />
           </set>
         </option>
       </GradleProjectSettings>

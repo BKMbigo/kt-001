@@ -109,7 +109,7 @@ interface Resolver {
     /**
      * The paths passed to KSP
      * */
-    val directoryOptions: KSDirectoryOptions
+    val galleryKSOptions: GalleryKSOptions
 
     /**
      * map a declaration to jvm signature.

@@ -512,7 +512,11 @@ class KotlinSymbolProcessing(
             val firSession = ResolverAAImpl.ktModule.getFirResolveSession(project)
             firSession.useSiteFirSession.registerResolveComponents(dualLookupTracker)
 
-            val directoryOptions = object: KSDirectoryOptions {
+            val directoryOptions = object: GalleryKSOptions {
+                override val isGalleryConfiguration: Boolean = true
+
+                override val modulePackageName: String = ""
+
                 override val cachesDir: File = kspConfig.cachesDir
 
                 override val kotlinOutputDir: File = kspConfig.kotlinOutputDir

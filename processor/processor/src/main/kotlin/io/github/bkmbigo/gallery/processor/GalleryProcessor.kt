@@ -96,7 +96,7 @@ class GalleryProcessor(
         // Produce Main Component
 
 
-
+        logger.error("Success")
         emptyList()
     }
 }

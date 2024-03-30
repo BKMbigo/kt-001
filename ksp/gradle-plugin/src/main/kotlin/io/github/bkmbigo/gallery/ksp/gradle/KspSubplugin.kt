@@ -239,8 +239,6 @@ class KspGradleSubplugin @Inject internal constructor(private val registry: Tool
             KSP_PLUGIN_CLASSPATH_CONFIGURATION_NAME,
             "$KSP_GROUP_ID:$KSP_COMPILER_PLUGIN_ID:$KSP_VERSION"
         )
-        project.logger.error("\nKSP version is ${KSP_VERSION}")
-        project.logger.error("Dependencies are ${kspClasspathCfg.dependencies.joinToString("\n\t") { "${it.group}:${it.name}:${it.version}" }}")
 
         val kspClasspathCfgNonEmbeddable = project.configurations.maybeCreate(
             KSP_PLUGIN_CLASSPATH_CONFIGURATION_NAME_NON_EMBEDDABLE
