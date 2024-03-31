@@ -9,6 +9,7 @@ import io.github.bkmbigo.gallery.processor.internal.codegenerator.generateCompon
 import io.github.bkmbigo.gallery.processor.internal.environment.createDefaultProcessorEnvironment
 import io.github.bkmbigo.gallery.processor.internal.models.ComponentRegistrar
 import io.github.bkmbigo.gallery.processor.internal.models.StateComponentMap
+import io.github.bkmbigo.gallery.processor.internal.verifiers.*
 import io.github.bkmbigo.gallery.processor.internal.verifiers.matcher.matchParameters
 import io.github.bkmbigo.gallery.processor.internal.verifiers.processComponent
 import io.github.bkmbigo.gallery.processor.internal.verifiers.processComponentTheme
@@ -69,6 +70,14 @@ class GalleryProcessor(
                 componentRegistrar.registerGalleryScreen(screenComponent)
             }
 
+        // @GalleryComponentSelectionScreen
+        resolver.getSymbolsWithAnnotation(Constants.Annotations.FQName.GalleryComponentSelectionScreen)
+            .filterIsInstance<KSFunctionDeclaration>()
+            .forEach {
+                val screenComponent = it.processScreenComponentSelectionScreen()
+                componentRegistrar.registerScreenComponentSelectionScreen(screenComponent)
+            }
+
 
         // At this point, the following conditions have to be met:
         //      There should be a registered @GalleryScreen Component
@@ -77,10 +86,15 @@ class GalleryProcessor(
             throw GalleryProcessorException()
         }
 
+        if (!componentRegistrar.hasScreenComponentSelectionScreen) {
+            logger.error("The project does not have a @GalleryComponentSelectionScreen component. Please add it manually or register a library/module providing it")
+            throw GalleryProcessorException()
+        }
+
         // Produce @GalleryComponent files
         componentRegistrar.components.forEach { component ->
             codeGenerator.createNewFile(
-                dependencies = Dependencies.ALL_FILES,
+                dependencies = Dependencies.ALL_FILES, // I have disabled KSP's incremental compilation
                 packageName = component.fqName.getQualifier(),
                 fileName = "${component.fqName.getShortName()}ComponentScreen"
             ).apply {

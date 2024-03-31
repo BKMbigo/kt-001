@@ -50,3 +50,23 @@ val KSType.isShort
 context(ProcessorEnvironment)
 val KSType.isNumber
     get() = this == builtIns.numberType
+
+context(ProcessorEnvironment)
+val KSType.isKotlinList
+    get() = this.declaration.qualifiedName?.asString() == "kotlin.collections.List"
+
+context(ProcessorEnvironment)
+val KSType.isKotlinMutableList
+    get() = this.declaration.qualifiedName?.asString() == "kotlin.collections.MutableList"
+
+context(ProcessorEnvironment)
+val KSType.isKotlinSet
+    get() = this.declaration.qualifiedName?.asString() == "kotlin.collections.Set"
+
+context(ProcessorEnvironment)
+val KSType.isKotlinMutableSet
+    get() = this.declaration.qualifiedName?.asString() == "kotlin.collections.MutableSet"
+
+context(ProcessorEnvironment)
+val KSType.isKotlinPersistentList
+    get() = this.declaration.qualifiedName?.asString() == "kotlinx.collections.immutable.PersistentList"

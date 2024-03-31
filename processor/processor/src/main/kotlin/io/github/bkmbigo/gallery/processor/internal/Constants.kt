@@ -2,9 +2,10 @@ package io.github.bkmbigo.gallery.processor.internal
 
 import io.github.bkmbigo.gallery.GalleryComponentTheme as GalleryComponentThemeAnnotation
 import io.github.bkmbigo.gallery.GalleryScreen as GalleryScreenAnnotation
+import io.github.bkmbigo.gallery.GalleryComponentSelectionScreen as GalleryComponentSelectionScreenAnnotation
 import io.github.bkmbigo.gallery.GalleryPageRow as GalleryPageRowAnnotation
-import io.github.bkmbigo.gallery.GalleryMultiSelectablePage as GalleryMultiSelectablePageAnnotation
-import io.github.bkmbigo.gallery.GallerySingleSelectablePage as GallerySingleSelectablePageAnnotation
+import io.github.bkmbigo.gallery.GalleryMultiSelectableElementPage as GalleryMultiSelectablePageAnnotation
+import io.github.bkmbigo.gallery.GallerySingleSelectableElementPage as GallerySingleSelectablePageAnnotation
 import io.github.bkmbigo.gallery.GalleryStateParameter as GalleryStateParameterAnnotation
 import io.github.bkmbigo.gallery.GalleryComponent as GalleryComponentAnnotation
 import io.github.bkmbigo.gallery.GalleryStateComponent as GalleryStateComponentAnnotation
@@ -28,6 +29,7 @@ internal object Constants {
             val GalleryMultiSelectablePage = GalleryMultiSelectablePageAnnotation::class.simpleName!!
             val GalleryPageRow = GalleryPageRowAnnotation::class.simpleName!!
             val GalleryScreen = GalleryScreenAnnotation::class.simpleName!!
+            val GalleryComponentSelectionScreen = GalleryComponentSelectionScreenAnnotation::class.simpleName!!
 
             // Extra Annotations
             val Composable = "Composable"
@@ -46,6 +48,7 @@ internal object Constants {
             val GalleryMultiSelectablePage = GalleryMultiSelectablePageAnnotation::class.qualifiedName!!
             val GalleryPageRow = GalleryPageRowAnnotation::class.qualifiedName!!
             val GalleryScreen = GalleryScreenAnnotation::class.qualifiedName!!
+            val GalleryComponentSelectionScreen = GalleryComponentSelectionScreenAnnotation::class.qualifiedName!!
 
             val Composable = "androidx.compose.runtime.Composable"
         }

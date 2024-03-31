@@ -3,6 +3,7 @@ package io.github.bkmbigo.gallery.processor.internal.models
 import io.github.bkmbigo.gallery.processor.internal.GalleryProcessorException
 import io.github.bkmbigo.gallery.processor.internal.environment.ProcessorEnvironment
 import io.github.bkmbigo.gallery.processor.internal.models.wrappers.ParamWrapper
+import io.github.bkmbigo.gallery.processor.internal.models.wrappers.ComponentSelectionScreenWrapper
 import io.github.bkmbigo.gallery.processor.internal.models.wrappers.ScreenComponentWrapper
 import io.github.bkmbigo.gallery.processor.internal.models.wrappers.StateComponentWrapper
 import io.github.bkmbigo.gallery.processor.internal.verifiers.matcher.ComponentMatched
@@ -18,16 +19,26 @@ internal class ComponentRegistrar {
 
     private var screenComponent: ScreenComponentWrapper? = null
 
-    val screen
-        get() = screenComponent
+    private var componentSelectionScreenWrapper: ComponentSelectionScreenWrapper? = null
 
-    val components = componentList.asSequence()
 
     val hasScreen
         get() = screenComponent != null
 
+    val hasScreenComponentSelectionScreen
+        get() = componentSelectionScreenWrapper != null
+
+    val screen
+        get() = screenComponent
+
+    val screenComponentSelectionScreen
+        get() = componentSelectionScreenWrapper
+
+    val components = componentList.asSequence()
+
     val themeStateComponents
         get() = themeStateComponentMap.values.associate { it }
+
 
     fun addComponent(
         componentMatched: ComponentMatched
@@ -62,5 +73,10 @@ internal class ComponentRegistrar {
             true
         }
 
+    fun registerScreenComponentSelectionScreen(
+        screenComponentSelectionScr: ComponentSelectionScreenWrapper
+    ) {
+        componentSelectionScreenWrapper = screenComponentSelectionScr
+    }
 
 }

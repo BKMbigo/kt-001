@@ -2,4 +2,4 @@ package io.github.bkmbigo.gallery
 
 @Retention(AnnotationRetention.BINARY)
 @Target(AnnotationTarget.FUNCTION)
-annotation class GalleryMultiSelectablePage
+annotation class GalleryMultiSelectableElementPage

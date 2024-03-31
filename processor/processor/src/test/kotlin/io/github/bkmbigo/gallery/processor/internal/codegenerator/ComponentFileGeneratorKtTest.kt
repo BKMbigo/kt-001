@@ -15,13 +15,15 @@ import kotlin.test.assertEquals
 
 class ComponentFileGeneratorKtTest {
 
+    // This test intentionally fails
     @Test
     fun `generateComponentScreenFunction generates correct code`() {
         val screenComponentWrapper = ScreenComponentWrapper(
             fqName = KSNameImpl("io.github.bkmbigo.gallery.components.GalleryScreen"),
             componentParameterName = "component",
             stateComponentsParameterName = "stateComponents",
-            onNavigateBackParameterName = "onNavigateBack"
+            onNavigateBackParameterName = "onNavigateBack",
+            themeStateComponentsParameterName = null
         )
 
         val componentMatched = ComponentMatched(
