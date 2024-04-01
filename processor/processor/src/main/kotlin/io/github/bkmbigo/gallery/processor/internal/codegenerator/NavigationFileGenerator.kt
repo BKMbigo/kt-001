@@ -153,7 +153,7 @@ internal class NavigationFileGenerator(
             )
 
             """|
-                |$componentSimpleName -> {
+                |GalleryDestination.$componentSimpleName -> {
                 |   $componentScreenCallee
                 |}
             """.trimMargin()

@@ -79,7 +79,7 @@ internal fun configureDesktopGallery(
 
                     val appInternal = createApplicationInternal(project.objects, galleryExtension)
                     val appContext = JvmApplicationContext(project, appInternal)
-                    appContext.configureDesktopJvmApplication()
+                    appContext.configureDesktopJvmApplication(project)
                 }
 
 
@@ -103,14 +103,16 @@ private fun createApplicationInternal(
     return jvmApplicationInternal
 }
 
-internal fun JvmApplicationContext.configureDesktopJvmApplication() {
+internal fun JvmApplicationContext.configureDesktopJvmApplication(
+    project: Project
+) {
     if (app.isDefaultConfigurationEnabled) {
         configureDefaultGalleryApp()
     }
 
 //    validatePackageVersions()
     val commonTasks = configureCommonGalleryJvmDesktopTasks()
-    configurePackagingTasks(commonTasks)
+    configurePackagingTasks(commonTasks, project)
 
     // I argue that compose multiplatform plugin will apply Wix
 //    if (currentOS == OS.Windows) {
@@ -127,10 +129,10 @@ internal class CommonJvmDesktopTasks(
 )
 
 private fun JvmApplicationContext.configureCommonGalleryJvmDesktopTasks(): CommonJvmDesktopTasks {
-    val unpackDefaultResources = tasks.register<AbstractUnpackDefaultComposeApplicationResourcesTask>(
-        taskNameAction = "unpack",
-        taskNameObject = "DefaultComposeDesktopJvmApplicationResources"
-    ) {}
+//    val unpackDefaultResources = tasks.register<AbstractUnpackDefaultComposeApplicationResourcesTask>(
+//        taskNameAction = "unpack",
+//        taskNameObject = "DefaultComposeDesktopJvmApplicationResources"
+//    ) {}
 
 //    val checkRuntime = tasks.register<AbstractCheckNativeDistributionRuntime>(
 //        taskNameAction = "check",
@@ -161,7 +163,7 @@ private fun JvmApplicationContext.configureCommonGalleryJvmDesktopTasks(): Commo
 //    }
 
     val prepareAppResources = tasks.register<Sync>(
-        taskNameAction = "prepare",
+        taskNameAction = "prepareGallery",
         taskNameObject = "appResources"
     ) {
         val appResourcesRootDir = app.nativeDistributions.appResourcesRootDir
@@ -195,22 +197,26 @@ private fun JvmApplicationContext.configureCommonGalleryJvmDesktopTasks(): Commo
 }
 
 private fun JvmApplicationContext.configurePackagingTasks(
-    commonTasks: CommonJvmDesktopTasks
+    commonTasks: CommonJvmDesktopTasks,
+    project: Project
 ) {
 
     val run = tasks.register<JavaExec>(taskNameAction = "desktopGalleryRun") {
-        configureRunTask(this, commonTasks.prepareAppResources)
+        configureRunTask(this, commonTasks.prepareAppResources, project)
     }
 
 }
 
 private fun JvmApplicationContext.configureRunTask(
     exec: JavaExec,
-    prepareAppResources: TaskProvider<Sync>
+    prepareAppResources: TaskProvider<Sync>,
+    project: Project
 ) {
     exec.dependsOn(prepareAppResources)
 
-    exec.mainClass.set(exec.provider { app.mainClass })
+    exec.dependsOn(project.tasks.getByName("galleryClasses"))
+
+    exec.mainClass.set(exec.provider { "gallery/MainKt" })
 
     exec.executable(javaExecutable(app.javaHome))
     exec.jvmArgs = arrayListOf<String>().apply {
@@ -227,7 +233,9 @@ private fun JvmApplicationContext.configureRunTask(
         add("-D$APP_RESOURCES_DIR=${appResourcesDir.absolutePath}")
     }
     exec.args = app.args
+
     exec.useAppRuntimeFiles { (runtimeJars, _) ->
+        project.logger.error("All classpath/runtimeJars are $runtimeJars")
         classpath = runtimeJars
     }
 }

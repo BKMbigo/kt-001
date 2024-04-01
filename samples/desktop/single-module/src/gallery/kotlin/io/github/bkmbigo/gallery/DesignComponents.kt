@@ -1,5 +1,6 @@
 package io.github.bkmbigo.gallery
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -9,9 +10,12 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.splitpane.ExperimentalSplitPaneApi
 import org.jetbrains.compose.splitpane.HorizontalSplitPane
+import org.jetbrains.compose.splitpane.SplitPaneState
 
 @GalleryComponentSelectionScreen
 @Composable
@@ -66,13 +70,71 @@ fun MyGalleryScreen(
 
     var isComponentState by remember { mutableStateOf(false) }
 
-    HorizontalSplitPane {
+    HorizontalSplitPane(
+        splitPaneState = SplitPaneState(
+            initialPositionPercentage = 0.5f,
+            moveEnabled = true
+        )
+    ) {
         first {
             component()
         }
 
         splitter {
+            handle {
 
+                val contentColor = LocalContentColor.current
+
+                Box(
+                    modifier = Modifier
+                        .size(32.dp)
+                        .border(
+                            width = 24.dp,
+                            color = contentColor
+                        )
+                        .drawBehind {
+                            drawLine(
+                                color = contentColor,
+                                start = Offset(
+                                    x = 5f,
+                                    y = size.height / 4
+                                ),
+                                end = Offset(
+                                    x = size.width - 5f,
+                                    y = size.height / 4
+                                )
+                            )
+
+                            drawLine(
+                                color = contentColor,
+                                start = Offset(
+                                    x = 5f,
+                                    y = size.height / 2
+                                ),
+                                end = Offset(
+                                    x = size.width - 5f,
+                                    y = size.height / 2
+                                )
+                            )
+
+                            drawLine(
+                                color = contentColor,
+                                start = Offset(
+                                    x = 5f,
+                                    y = size.height * 3 / 4
+                                ),
+                                end = Offset(
+                                    x = size.width - 5f,
+                                    y = size.height * 3 / 4
+                                )
+                            )
+                        }
+                )
+
+            }
+
+            handle {
+            }
         }
 
         second {

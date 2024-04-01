@@ -5,6 +5,7 @@ import io.github.bkmbigo.gallery.ksp.symbol.KSAnnotated
 import io.github.bkmbigo.gallery.ksp.symbol.KSFunctionDeclaration
 import io.github.bkmbigo.gallery.processor.internal.Constants
 import io.github.bkmbigo.gallery.processor.internal.GalleryProcessorException
+import io.github.bkmbigo.gallery.processor.internal.codegenerator.NavigationFileGenerator
 import io.github.bkmbigo.gallery.processor.internal.codegenerator.generateComponentScreenFunction
 import io.github.bkmbigo.gallery.processor.internal.environment.createDefaultProcessorEnvironment
 import io.github.bkmbigo.gallery.processor.internal.models.ComponentRegistrar
@@ -81,15 +82,15 @@ class GalleryProcessor(
 
         // At this point, the following conditions have to be met:
         //      There should be a registered @GalleryScreen Component
-        if (!componentRegistrar.hasScreen) {
-            logger.error("The project does not have a @GalleryScreen component. Please add it manually or register a library/module containing a @GalleryScreen")
-            throw GalleryProcessorException()
-        }
+//        if (!componentRegistrar.hasScreen) {
+//            logger.error("The project does not have a @GalleryScreen component. Please add it manually or register a library/module containing a @GalleryScreen")
+//            throw GalleryProcessorException()
+//        }
 
-        if (!componentRegistrar.hasScreenComponentSelectionScreen) {
-            logger.error("The project does not have a @GalleryComponentSelectionScreen component. Please add it manually or register a library/module providing it")
-            throw GalleryProcessorException()
-        }
+//        if (!componentRegistrar.hasScreenComponentSelectionScreen) {
+//            logger.error("The project does not have a @GalleryComponentSelectionScreen component. Please add it manually or register a library/module providing it")
+//            throw GalleryProcessorException()
+//        }
 
         // Produce @GalleryComponent files
         componentRegistrar.components.forEach { component ->
@@ -105,12 +106,28 @@ class GalleryProcessor(
         }
 
         // Produce Navigation Component
+        if (componentRegistrar.hasScreen && componentRegistrar.hasScreenComponentSelectionScreen) {
+            codeGenerator.createNewFile(
+                dependencies = Dependencies.ALL_FILES, // I have disabled KSP's incremental compilation
+                packageName = "gallery",
+                fileName = "MainNavigationComponent"
+            ).apply {
+                writer().use {
+                    it.append(NavigationFileGenerator(componentRegistrar).generateNavigationFile())
+                }
+            }
 
-
-        // Produce Main Component
-
-
-        logger.error("Success")
+            // Main component
+            codeGenerator.createNewFile(
+                dependencies = Dependencies.ALL_FILES, // I have disabled KSP's incremental compilation
+                packageName = "gallery",
+                fileName = "Main"
+            ).apply {
+                writer().use {
+                    it.append(NavigationFileGenerator(componentRegistrar).generateMainFile())
+                }
+            }
+        }
         emptyList()
     }
 }

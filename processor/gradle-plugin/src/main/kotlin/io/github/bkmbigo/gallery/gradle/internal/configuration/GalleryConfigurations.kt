@@ -16,7 +16,7 @@ internal object GalleryConfigurations {
             if (targets.isNotEmpty()) {
                 val mainCompilations = targets.map { it to it.compilations.findByName("main") }.filter { it.second != null }
                 mainCompilations.forEach { (target, mainCompilation) ->
-                    target.compilations.create("gallery") {
+                    val compilation = target.compilations.create("gallery") {
                         associateWith(mainCompilation!!)
                     }
                 }

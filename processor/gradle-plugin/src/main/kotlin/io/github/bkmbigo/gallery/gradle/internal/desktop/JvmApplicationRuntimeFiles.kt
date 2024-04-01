@@ -52,7 +52,6 @@ internal sealed class JvmApplicationRuntimeFilesProvider {
 
 
         private fun getMyJarTaskName(): String {
-            project.logger.error("FromGradleSourceSet: ${sourceSet.name} jarTaskName: ${sourceSet.jarTaskName}")
             return sourceSet.jarTaskName
         }
     }

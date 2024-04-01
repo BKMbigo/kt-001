@@ -28,9 +28,8 @@ internal class JvmTasks(
         args: List<Any> = emptyList(),
         noinline configureFn: T.() -> Unit = {}
     ): TaskProvider<T> {
-        val buildTypeClassifier = "Gallery"
         val objectClassifier = taskNameObject.uppercaseFirstChar()
-        val taskName = "$taskNameAction$buildTypeClassifier$objectClassifier"
+        val taskName = "$taskNameAction$objectClassifier"
         return register(taskName, klass = T::class.java, args = args, configureFn = configureFn)
     }
 

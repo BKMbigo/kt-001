@@ -21,6 +21,8 @@ dependencies {
     @OptIn(ExperimentalComposeLibrary::class)
     implementation(compose.desktop.components.splitPane)
 
+    implementation(compose.desktop.currentOs)
+
     implementation("io.github.bkmbigo.gallery:api-design") // In this example, I am going to create design components
 }
 
