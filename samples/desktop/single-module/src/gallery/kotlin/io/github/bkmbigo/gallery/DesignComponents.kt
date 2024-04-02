@@ -1,12 +1,15 @@
 package io.github.bkmbigo.gallery
 
-import androidx.compose.foundation.*
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.filled.ChevronRight
@@ -18,14 +21,12 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.materialkolor.hct.Hct
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
@@ -51,15 +52,15 @@ fun <T : AbstractGalleryComponent> MyComponentChooser(
     var displayedComponents by remember { mutableStateOf(components) } // Should be PersistentList
 
     LaunchedEffect(searchTextFieldValue) {
-            searchJob?.cancel()
-            searchJob = launch {
-                delay(3000)
-                if (isActive) {
-                    displayedComponents = components.filter {
-                        it.componentName.contains(searchTextFieldValue.text)
-                    }
+        searchJob?.cancel()
+        searchJob = launch {
+            delay(3000)
+            if (isActive) {
+                displayedComponents = components.filter {
+                    it.componentName.contains(searchTextFieldValue.text)
                 }
             }
+        }
     }
 
     Column(
@@ -159,7 +160,7 @@ fun MyGalleryScreen(
     }
 
     Column {
-        TopAppBar(
+        CenterAlignedTopAppBar(
             navigationIcon = {
                 IconButton(onClick = { onNavigateBack() }) {
                     Icon(imageVector = Icons.Default.ChevronLeft, contentDescription = null)
@@ -292,24 +293,27 @@ fun MyPageSubstitute(
     paramName: String,
     onNavigateToScreen: () -> Unit
 ) {
-    Row(
+    ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null,
-                onClick = {
-                    onNavigateToScreen()
-                }
-            ),
-        horizontalArrangement = Arrangement.SpaceBetween
+            .padding(horizontal = 4.dp),
+        onClick = {
+            onNavigateToScreen()
+        }
     ) {
-        Text(text = paramName)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp, vertical = 4.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(text = paramName)
 
-        Icon(
-            imageVector = Icons.Default.ChevronRight,
-            contentDescription = null
-        )
+            Icon(
+                imageVector = Icons.Default.ChevronRight,
+                contentDescription = null
+            )
+        }
     }
 }
 
@@ -320,21 +324,27 @@ fun BooleanStateComponent(
     state: Boolean,
     onStateChanged: (Boolean) -> Unit
 ) {
-    Row(
+    ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 4.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+            .padding(horizontal = 4.dp)
     ) {
-        Text(paramName)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 4.dp, vertical = 2.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(paramName)
 
-        Spacer(modifier = Modifier.width(4.dp))
+            Spacer(modifier = Modifier.width(4.dp))
 
-        Switch(
-            checked = state,
-            onCheckedChange = onStateChanged
-        )
+            Switch(
+                checked = state,
+                onCheckedChange = onStateChanged
+            )
+        }
     }
 }
 
@@ -358,38 +368,45 @@ fun NullableBooleanStateComponent(
         )
     }
 
-    Row(
+
+    ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 4.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+            .padding(horizontal = 4.dp)
     ) {
-        Text(paramName)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 4.dp, vertical = 2.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(paramName)
 
-        Spacer(modifier = Modifier.width(4.dp))
+            Spacer(modifier = Modifier.width(4.dp))
 
-        Row {
-            Switch(
-                checked = switchState,
-                onCheckedChange = onStateChanged
-            )
+            Row {
+                Switch(
+                    checked = switchState,
+                    onCheckedChange = onStateChanged
+                )
 
-            Spacer(modifier = Modifier.width(2.dp))
+                Spacer(modifier = Modifier.width(2.dp))
 
-            FilterChip(
-                selected = state == null,
-                onClick = {
-                    if (state != null) {
-                        onStateChanged(null)
-                    } else {
-                        onStateChanged(false)
+                FilterChip(
+                    selected = state == null,
+                    onClick = {
+                        if (state != null) {
+                            onStateChanged(null)
+                        } else {
+                            onStateChanged(false)
+                        }
+                    },
+                    label = {
+                        Text("null")
                     }
-                },
-                label = {
-                    Text("null")
-                }
-            )
+                )
+            }
         }
     }
 }
@@ -408,41 +425,50 @@ fun IntStateComponent(
         stateSaver = TextFieldValue.Saver
     ) { mutableStateOf(TextFieldValue(state.toString())) }
 
-    Row(
-        modifier = Modifier,
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+
+    ElevatedCard(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 4.dp)
     ) {
-        Text(text = paramName)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 4.dp, vertical = 2.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(text = paramName)
 
-        Spacer(modifier = Modifier.width(2.dp))
+            Spacer(modifier = Modifier.width(2.dp))
 
-        OutlinedTextField(
-            value = intState,
-            onValueChange = { newValue ->
-                if (newValue.text.isBlank()) {
-                    onStateChanged(0)
-                } else {
-                    val number = newValue.text.toIntOrNull()
-                    if (number != null) {
-                        onStateChanged(number)
+            OutlinedTextField(
+                value = intState,
+                onValueChange = { newValue ->
+                    if (newValue.text.isBlank()) {
+                        onStateChanged(0)
                     } else {
-                        val text = newValue.text
-                        text.replace(Regex("[^0-9]"), "")
-                        val newNumber = text.toIntOrNull()
-                        if (newNumber != null) {
-                            onStateChanged(newNumber)
+                        val number = newValue.text.toIntOrNull()
+                        if (number != null) {
+                            onStateChanged(number)
+                        } else {
+                            val text = newValue.text
+                            text.replace(Regex("[^0-9]"), "")
+                            val newNumber = text.toIntOrNull()
+                            if (newNumber != null) {
+                                onStateChanged(newNumber)
+                            }
                         }
                     }
-                }
-            },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Number
-            ),
-            singleLine = true,
-            maxLines = 1,
-            minLines = 1
-        )
+                },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number
+                ),
+                singleLine = true,
+                maxLines = 1,
+                minLines = 1
+            )
+        }
     }
 }
 
@@ -455,24 +481,30 @@ fun StringStateComponent(
     onState: (String) -> Unit
 ) {
 
-    val stringState by rememberSaveable(state, stateSaver = TextFieldValue.Saver) {
-        mutableStateOf(TextFieldValue(state))
-    }
 
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+    ElevatedCard(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 4.dp)
     ) {
-        Text(paramName)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp, vertical = 2.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(paramName)
 
-        Spacer(modifier = Modifier.width(2.dp))
+            Spacer(modifier = Modifier.width(2.dp))
 
-        OutlinedTextField(
-            value = stringState,
-            onValueChange = {
-                onState(it.text)
-            }
-        )
+            OutlinedTextField(
+                value = state,
+                onValueChange = {
+                    onState(it)
+                }
+            )
+        }
     }
 }
 

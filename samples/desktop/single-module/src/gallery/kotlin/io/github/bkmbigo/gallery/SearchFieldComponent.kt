@@ -10,13 +10,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
 import io.github.bkmbigo.gallery.components.SearchField
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @GalleryComponent
+@Preview
 @Composable
-fun SearchFieldComponent(
-    showLeadingIcon: Boolean = true,
-    buttonBackgroundColor: Color = MaterialTheme.colorScheme.primaryContainer
-) {
+fun SearchFieldComponent() {
+
     var searchText by rememberSaveable(stateSaver = TextFieldValue.Saver) {
         mutableStateOf(TextFieldValue(""))
     }
@@ -28,8 +28,8 @@ fun SearchFieldComponent(
         },
         onSearch = {},
         modifier = Modifier,
-        showLeadingIcon = showLeadingIcon,
-        buttonBackgroundColor = buttonBackgroundColor,
+        showLeadingIcon = true,
+        buttonBackgroundColor = MaterialTheme.colorScheme.primaryContainer,
         placeholderText = "Search"
     )
 }
