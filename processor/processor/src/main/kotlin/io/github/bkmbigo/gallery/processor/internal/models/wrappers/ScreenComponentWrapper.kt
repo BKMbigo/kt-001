@@ -6,6 +6,9 @@ internal data class ScreenComponentWrapper(
     val fqName: KSName,
     val componentParameterName: String,
     val stateComponentsParameterName: String,
+    val componentNameParameterName: String?,
     val themeStateComponentsParameterName: String?,
-    val onNavigateBackParameterName: String?
+    val onNavigateBackParameterName: String?,
+    val hasStateComponentsParameterName: String?,
+    val hasThemeComponentParameterName: String?
 )

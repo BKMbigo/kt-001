@@ -1,5 +1,7 @@
 package io.github.bkmbigo.gallery.gradle.internal.configuration
 
+
+import org.gradle.api.Project
 import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
 import org.jetbrains.kotlin.gradle.plugin.mpp.pm20.util.targets
@@ -7,6 +9,7 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.pm20.util.targets
 internal object GalleryConfigurations {
 
     fun createGalleryConfiguration(
+        project: Project,
         kotlinExtension: KotlinProjectExtension,
         platform: KotlinPlatformType
     ) {

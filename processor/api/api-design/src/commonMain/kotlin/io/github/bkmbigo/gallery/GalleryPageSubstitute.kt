@@ -5,4 +5,4 @@ package io.github.bkmbigo.gallery
  * */
 @Retention(AnnotationRetention.BINARY)
 @Target(AnnotationTarget.FUNCTION)
-annotation class GalleryPageRow
+annotation class GalleryPageSubstitute<T>

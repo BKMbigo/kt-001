@@ -3,14 +3,10 @@ package io.github.bkmbigo.gallery.processor.internal.models.wrappers
 import io.github.bkmbigo.gallery.ksp.symbol.KSName
 import io.github.bkmbigo.gallery.ksp.symbol.KSType
 
-internal data class StateComponentWrapper(
-    val isRow: Boolean,
+internal data class PageSubstituteWrapper(
     val fqName: KSName,
+    // For future plans --> A User might want to declare a specific @GalleryPageSubstitute for a specific type
     val type: KSType,
-    val isDefault: Boolean = true,
-    val identifier: String? = null,
-    val stateParameterName: String,
-    val onStateParameterName: String,
     val paramNameParameterName: String?,
-    val onNavigateBackParameterName: String?
+    val onNavigateToScreenParameterName: String
 )

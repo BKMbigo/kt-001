@@ -1,13 +1,13 @@
 package io.github.bkmbigo.gallery.processor.internal.verifiers
 
 import io.github.bkmbigo.gallery.ksp.isPrivate
-import io.github.bkmbigo.gallery.ksp.symbol.KSFile
 import io.github.bkmbigo.gallery.ksp.symbol.KSFunctionDeclaration
 import io.github.bkmbigo.gallery.processor.internal.GalleryProcessorException
 import io.github.bkmbigo.gallery.processor.internal.environment.ProcessorEnvironment
 import io.github.bkmbigo.gallery.processor.internal.models.wrappers.ScreenComponentWrapper
+import io.github.bkmbigo.gallery.processor.internal.utils.isBoolean
 import io.github.bkmbigo.gallery.processor.internal.utils.isComposable
-import io.github.bkmbigo.gallery.processor.internal.utils.isTopLevelFunction
+import io.github.bkmbigo.gallery.processor.internal.utils.isString
 import io.github.bkmbigo.gallery.processor.internal.utils.isUnit
 
 context(ProcessorEnvironment)
@@ -37,7 +37,6 @@ internal fun KSFunctionDeclaration.processScreenComponent(): ScreenComponentWrap
     }
 
     val componentParameter = componentParameters.first()
-
     val componentParameterType = componentParameter.type.resolve()
 
     if (!componentParameterType.isFunctionType) {
@@ -61,7 +60,6 @@ internal fun KSFunctionDeclaration.processScreenComponent(): ScreenComponentWrap
     }
 
     val stateComponentParameter = stateComponentParameters.first()
-
     val stateComponentParameterType = stateComponentParameter.type.resolve()
 
     if (!stateComponentParameterType.isFunctionType) {
@@ -75,24 +73,34 @@ internal fun KSFunctionDeclaration.processScreenComponent(): ScreenComponentWrap
     val hasOnNavigateBackParameter: Boolean
 
     // Check for optional parameter `onNavigateBack`
-    val onNavigateBackParameters = parameters.filter { it.name?.getShortName() == "onNavigateBack" }
+    val onNavigateBackParameter = parameters.firstOrNull { it.name?.getShortName() == "onNavigateBack" }
 
-    if (onNavigateBackParameters.isNotEmpty()) {
-        val onNavigateBackParameter = onNavigateBackParameters.first()
-
+    if (onNavigateBackParameter != null) {
         val onNavigateBackType = onNavigateBackParameter.type.resolve()
 
         if (!onNavigateBackType.isFunctionType) {
-            logger.error("@GalleryScreen cannot have a parameter `onNavigateBack` that is not the type (() -> Unit)", this)
+            logger.error(
+                "@GalleryScreen cannot have a parameter `onNavigateBack` that is not the type (() -> Unit). Is not a function",
+                this
+            )
             throw GalleryProcessorException()
         } else if (onNavigateBackType.annotations.any { it.shortName.getShortName() == "Composable" }) {
-            logger.error("@GalleryScreen cannot have a parameter `onNavigateBack` that is takes a @Composable lambda", this)
+            logger.error(
+                "@GalleryScreen cannot have a parameter `onNavigateBack` that is takes a @Composable lambda",
+                this
+            )
             throw GalleryProcessorException()
         } else if (onNavigateBackParameter.type.element?.typeArguments?.size != 1) {
-            logger.error("@GalleryScreen cannot have a parameter `onNavigateBack` that is not the type (() -> Unit)", this)
+            logger.error(
+                "@GalleryScreen cannot have a parameter `onNavigateBack` that is not the type (() -> Unit). Type arguments error",
+                this
+            )
             throw GalleryProcessorException()
-        } else if (onNavigateBackParameter.type.element?.typeArguments?.getOrNull(0)?.type?.resolve()?.isUnit == true) {
-            logger.error("@GalleryScreen cannot have a parameter `onNavigateBack` that is not the type (() -> Unit)", this)
+        } else if (onNavigateBackParameter.type.element?.typeArguments?.getOrNull(0)?.type?.resolve()?.isUnit != true) {
+            logger.error(
+                "@GalleryScreen cannot have a parameter `onNavigateBack` that is not the type (() -> Unit). Unit check error",
+                this
+            )
             throw GalleryProcessorException()
         }
 
@@ -112,16 +120,25 @@ internal fun KSFunctionDeclaration.processScreenComponent(): ScreenComponentWrap
         val themeStateComponentsParameterType = themeStateComponentsParameter.type.resolve()
 
         if (!themeStateComponentsParameterType.isFunctionType) {
-            logger.error("@GalleryScreen cannot have a parameter `themeStateComponents` that is not the type (@Composable () -> Unit)", this)
+            logger.error(
+                "@GalleryScreen cannot have a parameter `themeStateComponents` that is not the type (@Composable () -> Unit)",
+                this
+            )
             throw GalleryProcessorException()
         } else if (!themeStateComponentsParameterType.annotations.any { it.shortName.getShortName() == "Composable" }) {
             logger.error("@GalleryScreen the parameter `themeStateComponents` has to be a @Composable lambda", this)
             throw GalleryProcessorException()
         } else if (themeStateComponentsParameter.type.element?.typeArguments?.size != 1) {
-            logger.error("@GalleryScreen cannot have a parameter `themeStateComponents` that is not the type (@Composable () -> Unit). Has more type arguments", this)
+            logger.error(
+                "@GalleryScreen cannot have a parameter `themeStateComponents` that is not the type (@Composable () -> Unit). Has more type arguments",
+                this
+            )
             throw GalleryProcessorException()
         } else if (themeStateComponentsParameter.type.element?.typeArguments?.getOrNull(0)?.type?.resolve()?.isUnit != true) {
-            logger.error("@GalleryScreen cannot have a parameter `themeStateComponents` that is not the type (@Composable () -> Unit)", this)
+            logger.error(
+                "@GalleryScreen cannot have a parameter `themeStateComponents` that is not the type (@Composable () -> Unit)",
+                this
+            )
             throw GalleryProcessorException()
         }
 
@@ -130,12 +147,91 @@ internal fun KSFunctionDeclaration.processScreenComponent(): ScreenComponentWrap
         hasThemeStateComponentsParameter = false
     }
 
+    // Check for optional parameter `componentName`
+    val hasComponentNameParameter: Boolean
+
+    val componentNameParameter = parameters.firstOrNull { it.name?.getShortName() == "componentName" }
+
+    if (componentNameParameter != null) {
+        val paramType = componentNameParameter.type.resolve()
+
+        if (!paramType.isString) {
+            logger.error(
+                "@GalleryScreen cannot have a parameter `componentName` which is not of type kotlin.String",
+                this
+            )
+            throw GalleryProcessorException()
+        }
+
+        hasComponentNameParameter = true
+    } else {
+        hasComponentNameParameter = false
+    }
+
+    // Check for optional parameter `hasStateComponents`
+    val hasHasStateComponentsParameter: Boolean
+
+    val hasStateComponentsParameter = parameters.firstOrNull { it.name?.getShortName() == "hasStateComponents" }
+
+    if (hasStateComponentsParameter != null) {
+        val paramType = hasStateComponentsParameter.type.resolve()
+
+        if (!paramType.isBoolean) {
+            logger.error(
+                "@GalleryScreen cannot have a parameter `hasStateComponents` which is not of type kotlin.Boolean",
+                this
+            )
+            throw GalleryProcessorException()
+        }
+
+        hasHasStateComponentsParameter = true
+    } else {
+        hasHasStateComponentsParameter = false
+    }
+
+    // Check for optional parameter `hasThemeComponents`
+    val hasHasThemeComponentsParameter: Boolean
+
+    val hasThemeComponentsParameter = parameters.firstOrNull { it.name?.getShortName() == "hasThemeComponents" }
+
+    if (hasThemeComponentsParameter != null) {
+        val paramType = hasThemeComponentsParameter.type.resolve()
+
+        if (!paramType.isBoolean) {
+            logger.error(
+                "@GalleryScreen cannot have a parameter `hasThemeComponents` which is not of type kotlin.Boolean",
+                this
+            )
+            throw GalleryProcessorException()
+        }
+
+        hasHasThemeComponentsParameter = true
+    } else {
+        hasHasThemeComponentsParameter = false
+    }
+
+    val remainingParameters =
+        (parameters - stateComponentParameters.toSet() - componentParameter - themeStateComponentsParameters.toSet()).toMutableList()
+
+    remainingParameters.remove(componentNameParameter)
+    remainingParameters.remove(hasStateComponentsParameter)
+    remainingParameters.remove(hasThemeComponentsParameter)
+    remainingParameters.remove(onNavigateBackParameter)
+
+    if (remainingParameters.any { !it.hasDefault }) {
+        logger.error("@GalleryScreen has parameters with non-default values", this)
+        throw GalleryProcessorException()
+    }
+
     return ScreenComponentWrapper(
         fqName = qualifiedName!!,
         componentParameterName = "component",
         stateComponentsParameterName = "stateComponents",
+        componentNameParameterName = if (hasComponentNameParameter) "componentName" else null,
         themeStateComponentsParameterName = if (hasThemeStateComponentsParameter) "themeStateComponents" else null,
-        onNavigateBackParameterName = if (hasOnNavigateBackParameter) "onNavigateBack" else null
+        onNavigateBackParameterName = if (hasOnNavigateBackParameter) "onNavigateBack" else null,
+        hasStateComponentsParameterName = if (hasHasStateComponentsParameter) "hasStateComponents" else null,
+        hasThemeComponentParameterName = if (hasHasThemeComponentsParameter) "hasThemeComponents" else null
     )
 
 }

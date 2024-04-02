@@ -2,7 +2,7 @@ package io.github.bkmbigo.gallery.processor.internal.models
 
 import io.github.bkmbigo.gallery.processor.internal.GalleryProcessorException
 import io.github.bkmbigo.gallery.processor.internal.environment.ProcessorEnvironment
-import io.github.bkmbigo.gallery.processor.internal.models.wrappers.ParamWrapper
+import io.github.bkmbigo.gallery.processor.internal.models.wrappers.*
 import io.github.bkmbigo.gallery.processor.internal.models.wrappers.ComponentSelectionScreenWrapper
 import io.github.bkmbigo.gallery.processor.internal.models.wrappers.ScreenComponentWrapper
 import io.github.bkmbigo.gallery.processor.internal.models.wrappers.StateComponentWrapper
@@ -20,6 +20,10 @@ internal class ComponentRegistrar {
     private var screenComponent: ScreenComponentWrapper? = null
 
     private var componentSelectionScreenWrapper: ComponentSelectionScreenWrapper? = null
+
+    // will be substituted for a more specific components
+    internal var genericPageSubstitute: PageSubstituteWrapper? = null
+        private set
 
 
     val hasScreen
@@ -77,6 +81,12 @@ internal class ComponentRegistrar {
         screenComponentSelectionScr: ComponentSelectionScreenWrapper
     ) {
         componentSelectionScreenWrapper = screenComponentSelectionScr
+    }
+
+    fun registerGenericPageSubstitute(
+        pageSubstituteWrapper: PageSubstituteWrapper
+    ) {
+        genericPageSubstitute = pageSubstituteWrapper
     }
 
 }

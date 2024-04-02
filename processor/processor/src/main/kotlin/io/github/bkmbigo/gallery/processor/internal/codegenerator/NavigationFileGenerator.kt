@@ -60,8 +60,7 @@ internal class NavigationFileGenerator(
             val mainComponent = generateMainNavigationComponent()
 
 
-            return """|
-            |package $GALLERY_PACKAGE
+            return """|package $GALLERY_PACKAGE
             |
             |${fileImportsHandler.getAllImportsDeclaration()}
             |
@@ -149,7 +148,8 @@ internal class NavigationFileGenerator(
             val componentSimpleName = component.fqName.getShortName()
             val componentScreenCallee = generateGalleryComponentScreenCallee(
                 screen = componentRegistrar.screen!!,
-                component = component
+                component = component,
+                hasThemeComponents = componentRegistrar.themeStateComponents.isNotEmpty()
             )
 
             """|
@@ -231,25 +231,27 @@ internal class NavigationFileGenerator(
     context(FileImportsHandler)
     private fun generateGalleryComponentScreenCallee(
         screen: ScreenComponentWrapper,
-        component: ComponentMatched
+        component: ComponentMatched,
+        hasThemeComponents: Boolean
     ): String {
 
         val screenFqName = "${component.fqName.asString()}$COMPONENT_SCREEN_SUFFIX"
         val screenName = "${component.fqName.getShortName()}$COMPONENT_SCREEN_SUFFIX"
 
-        val hasOnNavigateBackParameter = if(screen.onNavigateBackParameterName != null) {
+        val hasOnNavigateBackArgument = if(screen.onNavigateBackParameterName != null) {
             """|onNavigateBack = {
                 |   navigationState = null
-                |},
+                |}
             """.trimMargin()
-        } else ""
+        } else null
+
+        val hasThemeComponentsArgument = screen.hasThemeComponentParameterName?.let { hasThemeComponentParameterName ->
+            "$hasThemeComponentParameterName = $hasThemeComponents"
+        }
 
         addImport(screenFqName) // imports the screen component
 
-        return """|
-            |$screenName(
-            |   $hasOnNavigateBackParameter
-            |)
+        return """|$screenName(${hasOnNavigateBackArgument?.let{ "\n\t$it,\n" } ?: ""}${hasThemeComponentsArgument?.let{ "\n\t$it\n" } ?: ""})
         """.trimMargin()
     }
 
@@ -302,8 +304,7 @@ internal class NavigationFileGenerator(
         val stateParamName = stateComponentWrapper.stateParameterName
         val onStateParamName = stateComponentWrapper.onStateParameterName
 
-        return """|
-            |$functionName(
+        return """|$functionName(
             |   $stateParamName = $stateParamName,
             |   $onStateParamName = $onStateParamName
             |)

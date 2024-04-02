@@ -79,6 +79,14 @@ class GalleryProcessor(
                 componentRegistrar.registerScreenComponentSelectionScreen(screenComponent)
             }
 
+        // @GalleryPageSubstitute
+        resolver.getSymbolsWithAnnotation(Constants.Annotations.FQName.GalleryPageSubstitute)
+            .filterIsInstance<KSFunctionDeclaration>()
+            .forEach {
+                val pageSubstitute = it.processPageSubstitute()
+                componentRegistrar.registerGenericPageSubstitute(pageSubstitute)
+            }
+
 
         // At this point, the following conditions have to be met:
         //      There should be a registered @GalleryScreen Component
@@ -100,7 +108,7 @@ class GalleryProcessor(
                 fileName = "${component.fqName.getShortName()}ComponentScreen"
             ).apply {
                 writer().use {
-                    it.append(generateComponentScreenFunction(componentRegistrar.screen!!, component))
+                    it.append(generateComponentScreenFunction(componentRegistrar, componentRegistrar.screen!!, component))
                 }
             }
         }

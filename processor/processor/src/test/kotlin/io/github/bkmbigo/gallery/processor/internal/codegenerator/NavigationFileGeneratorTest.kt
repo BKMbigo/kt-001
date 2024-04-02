@@ -10,8 +10,9 @@ import io.github.bkmbigo.gallery.processor.internal.environment.ProcessorEnviron
 import io.github.bkmbigo.gallery.processor.internal.environment.ProcessorEnvironmentImpl
 import io.github.bkmbigo.gallery.processor.internal.environment.createDefaultProcessorEnvironment
 import io.github.bkmbigo.gallery.processor.internal.models.ComponentRegistrar
+import io.github.bkmbigo.gallery.processor.internal.models.wrappers.*
 import io.github.bkmbigo.gallery.processor.internal.models.wrappers.ComponentSelectionScreenWrapper
-import io.github.bkmbigo.gallery.processor.internal.models.wrappers.ParamWrapper
+import io.github.bkmbigo.gallery.processor.internal.models.wrappers.PageSubstituteWrapper
 import io.github.bkmbigo.gallery.processor.internal.models.wrappers.ScreenComponentWrapper
 import io.github.bkmbigo.gallery.processor.internal.models.wrappers.StateComponentWrapper
 import io.github.bkmbigo.gallery.processor.internal.verifiers.matcher.ComponentMatched
@@ -268,11 +269,13 @@ class NavigationFileGeneratorTest {
                 isDefault = true,
                 identifier = null,
                 stateParameterName = "state",
-                onStateParameterName = "onState"
+                onStateParameterName = "onState",
+                paramNameParameterName = "paramName",
+                onNavigateBackParameterName = null
             )
 
             val intNullableGalleryStateComponent = StateComponentWrapper(
-                isRow = false,
+                isRow = true,
                 fqName = KSNameImpl("io.github.bkmbigo.gallery.design.IntNullableStateComponent"),
                 type = KSFakeTypeImpl(
                     fqName = "kotlin.Int",
@@ -281,7 +284,9 @@ class NavigationFileGeneratorTest {
                 isDefault = true,
                 identifier = null,
                 stateParameterName = "stateInt",
-                onStateParameterName = "onStateInt"
+                onStateParameterName = "onStateInt",
+                paramNameParameterName = "paramName",
+                onNavigateBackParameterName = "onNavigateBack"
             )
 
             // Add Fake @GalleryComponent
@@ -308,14 +313,50 @@ class NavigationFileGeneratorTest {
                 )
             )
 
+            // Add Fake @GalleryComponent
+            fakeComponentRegistrar.addComponent(
+                ComponentMatched(
+                    componentName = "NullableAgeSelector",
+                    fqName = KSNameImpl("io.github.bkmbigo.gallery.components.StringSelector"),
+                    kDoc = null,
+                    importList = listOf(
+                        KSImportDirectiveImpl("kotlin.contracts.ExperimentalContractsAPI")
+                    ),
+                    parameters = mapOf(
+                        ParamWrapper(
+                            identifier = null,
+                            paramName = null,
+                            name = KSNameImpl("myAge"),
+                            type = KSFakeTypeImpl(
+                                fqName = "kotlin.Int",
+                                isNullable = true
+                            ),
+                            defaultExpression = KSExpressionImpl("21")
+                        ) to intNullableGalleryStateComponent,
+                        ParamWrapper(
+                            identifier = null,
+                            paramName = null,
+                            name = KSNameImpl("dadAge"),
+                            type = KSFakeTypeImpl(
+                                fqName = "kotlin.Int",
+                                isNullable = false
+                            ),
+                            defaultExpression = KSExpressionImpl("65")
+                        ) to intNullableGalleryStateComponent
+                    )
+                )
+            )
+
             fakeComponentRegistrar.registerGalleryScreen(
                 ScreenComponentWrapper(
                     fqName = KSNameImpl("io.github.bkmbigo.gallery.design.GalleryScreenComponent"),
                     componentParameterName = "component",
                     stateComponentsParameterName = "stateComponent",
                     themeStateComponentsParameterName = null,
-                    onNavigateBackParameterName = "onNavigateBack"
-
+                    onNavigateBackParameterName = "onNavigateBack",
+                    componentNameParameterName = "componentName",
+                    hasStateComponentsParameterName = null,
+                    hasThemeComponentParameterName = "hasThemeComponent"
                 )
             )
 
@@ -326,6 +367,18 @@ class NavigationFileGeneratorTest {
                     listParamIsPersistentList = ComponentSelectionScreenWrapper.ListParamType.List,
                     onSelectionParamName = "onComponentSelection",
                     path = null
+                )
+            )
+
+            fakeComponentRegistrar.registerGenericPageSubstitute(
+                PageSubstituteWrapper(
+                    fqName = KSNameImpl("io.github.bkmbigo.gallery.design.MyPageSubstitute"),
+                    type = KSFakeTypeImpl(
+                        fqName = "kotlin.Unit",
+                        isNullable = false
+                    ),
+                    paramNameParameterName = "paramName",
+                    onNavigateToScreenParameterName = "onNavigateToScreen"
                 )
             )
 

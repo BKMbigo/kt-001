@@ -3,7 +3,7 @@ package io.github.bkmbigo.gallery.processor.internal
 import io.github.bkmbigo.gallery.GalleryComponentTheme as GalleryComponentThemeAnnotation
 import io.github.bkmbigo.gallery.GalleryScreen as GalleryScreenAnnotation
 import io.github.bkmbigo.gallery.GalleryComponentSelectionScreen as GalleryComponentSelectionScreenAnnotation
-import io.github.bkmbigo.gallery.GalleryPageRow as GalleryPageRowAnnotation
+import io.github.bkmbigo.gallery.GalleryPageSubstitute as GalleryPageSubstituteAnnotation
 import io.github.bkmbigo.gallery.GalleryMultiSelectableElementPage as GalleryMultiSelectablePageAnnotation
 import io.github.bkmbigo.gallery.GallerySingleSelectableElementPage as GallerySingleSelectablePageAnnotation
 import io.github.bkmbigo.gallery.GalleryStateParameter as GalleryStateParameterAnnotation
@@ -27,7 +27,7 @@ internal object Constants {
             // Design Annotations
             val GallerySingleSelectablePage = GallerySingleSelectablePageAnnotation::class.simpleName!!
             val GalleryMultiSelectablePage = GalleryMultiSelectablePageAnnotation::class.simpleName!!
-            val GalleryPageRow = GalleryPageRowAnnotation::class.simpleName!!
+            val GalleryPageSubstitute = GalleryPageSubstituteAnnotation::class.simpleName!!
             val GalleryScreen = GalleryScreenAnnotation::class.simpleName!!
             val GalleryComponentSelectionScreen = GalleryComponentSelectionScreenAnnotation::class.simpleName!!
 
@@ -46,7 +46,7 @@ internal object Constants {
             // Design Annotations
             val GallerySingleSelectablePage = GallerySingleSelectablePageAnnotation::class.qualifiedName!!
             val GalleryMultiSelectablePage = GalleryMultiSelectablePageAnnotation::class.qualifiedName!!
-            val GalleryPageRow = GalleryPageRowAnnotation::class.qualifiedName!!
+            val GalleryPageSubstitute = GalleryPageSubstituteAnnotation::class.qualifiedName!!
             val GalleryScreen = GalleryScreenAnnotation::class.qualifiedName!!
             val GalleryComponentSelectionScreen = GalleryComponentSelectionScreenAnnotation::class.qualifiedName!!
 

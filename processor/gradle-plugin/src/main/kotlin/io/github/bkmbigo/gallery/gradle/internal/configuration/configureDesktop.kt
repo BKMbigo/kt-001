@@ -39,6 +39,7 @@ internal fun configureDesktopGallery(
             } else {
                 // create desktopGallery configuration
                 GalleryConfigurations.createGalleryConfiguration(
+                    project = project,
                     kotlinExtension = kotlinExtension,
                     platform = KotlinPlatformType.jvm
                 )

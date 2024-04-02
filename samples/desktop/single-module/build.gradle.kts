@@ -17,11 +17,14 @@ repositories {
 
 dependencies {
     implementation(compose.material3)
+    implementation(compose.materialIconsExtended)
     implementation(compose.components.uiToolingPreview)
     @OptIn(ExperimentalComposeLibrary::class)
     implementation(compose.desktop.components.splitPane)
 
-    implementation(compose.desktop.currentOs)
+    implementation(compose.desktop.currentOs) {
+        exclude("org.jetbrains.compose.material")
+    }
 
     implementation("io.github.bkmbigo.gallery:api-design") // In this example, I am going to create design components
 }

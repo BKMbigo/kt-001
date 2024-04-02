@@ -1,8 +1,7 @@
 package io.github.bkmbigo.gallery.processor.internal.codegenerator
 
-import com.squareup.kotlinpoet.*
-import io.github.bkmbigo.gallery.ksp.symbol.KSImportDirective
-import io.github.bkmbigo.gallery.processor.internal.environment.ProcessorEnvironment
+import io.github.bkmbigo.gallery.processor.internal.models.ComponentRegistrar
+import io.github.bkmbigo.gallery.processor.internal.models.wrappers.PageSubstituteWrapper
 import io.github.bkmbigo.gallery.processor.internal.models.wrappers.ParamWrapper
 import io.github.bkmbigo.gallery.processor.internal.models.wrappers.ScreenComponentWrapper
 import io.github.bkmbigo.gallery.processor.internal.models.wrappers.StateComponentWrapper
@@ -12,6 +11,7 @@ private const val STATE_SUFFIX = "State"
 internal const val COMPONENT_SCREEN_SUFFIX = "ComponentScreen"
 
 internal fun generateComponentScreenFunction(
+    componentRegistrar: ComponentRegistrar,
     screenComponent: ScreenComponentWrapper,
     componentMatched: ComponentMatched
 ): String {
@@ -30,7 +30,7 @@ internal fun generateComponentScreenFunction(
 
     // The optional `onNavigateBack` parameter
     val onNavigateBackParameter = screenComponent.onNavigateBackParameterName?.let {
-        "onNavigateBack: () -> Unit = {},"
+        "onNavigateBack: () -> Unit = {}"
     }
 
     val statePropertyDeclarations = componentMatched.parameters.map { (param, _) ->
@@ -40,14 +40,18 @@ internal fun generateComponentScreenFunction(
     }.joinToString("\n") { it }
 
     val screenComponentCallee = with(fileImportsHandler) {
-        generateGalleryScreenCallee(screenComponent, componentMatched)
+        generateGalleryScreenCallee(componentRegistrar, screenComponent, componentMatched)
+    }
+
+    val themeStateComponentParameter = "themeStateComponents: @Composable () -> Unit = {}"
+
+    val hasThemeComponentsParameter = screenComponent.hasThemeComponentParameterName?.let { hasThemeComponentParameterName ->
+        "$hasThemeComponentParameterName: Boolean"
     }
 
     with(fileImportsHandler){
         addImport("androidx.compose.runtime.Composable")
     }
-
-    val themeStateComponentArgument = "themeStateComponents: @Composable () -> Unit = {},"
 
     return """|
         |package $packageName
@@ -57,9 +61,8 @@ internal fun generateComponentScreenFunction(
         |// This is the function that is used to display the component ${componentMatched.fqName.asString()}
         |@Composable
         |fun $screenComponentFunctionName(
-        |   ${onNavigateBackParameter?.let { "\n\t$it," } ?: ""}
-        |   $screenParameters
-        |   $themeStateComponentArgument
+        |    $screenParameters
+        |    $themeStateComponentParameter${onNavigateBackParameter?.let { ",\n\t$it" } ?: ""}${hasThemeComponentsParameter?.let { ",\n\t$it" } ?: ""}
         |) {
         |
         |   // State
@@ -103,13 +106,13 @@ private fun ParamWrapper.generateStatePropertyDeclaration(): String {
     addImport("androidx.compose.runtime.setValue")
 
 
-    return """
-        |var $stateName by remember($paramName) { mutableStateOf($paramName) }
+    return """|var $stateName by remember($paramName) { mutableStateOf($paramName) }
     """.trimMargin()
 }
 
 context(FileImportsHandler)
 private fun generateGalleryScreenCallee(
+    componentRegistrar: ComponentRegistrar,
     screenComponent: ScreenComponentWrapper,
     componentMatched: ComponentMatched
 ): String {
@@ -120,14 +123,17 @@ private fun generateGalleryScreenCallee(
     val componentParameterName = screenComponent.componentParameterName
     val stateComponentsParameterName = screenComponent.stateComponentsParameterName
 
-    val stateComponentParameters = componentMatched.parameters.map { (param, stateComponentWrapper) ->
-        generateStateComponentCallee(param, stateComponentWrapper)
-    }.joinToString("\n") { it }
+    val stateComponentParameters = generateStateComponentCallee(componentRegistrar, componentMatched.parameters)
 
     val onNavigateBackParameter = screenComponent.onNavigateBackParameterName?.let { onNavigateBackParameterName ->
         """|$onNavigateBackParameterName = {
             |   onNavigateBack()
             |}
+        """.trimMargin()
+    }
+
+    val componentNameArgument = screenComponent.componentNameParameterName?.let { componentNameParameterName ->
+        """|$componentNameParameterName = "${componentMatched.componentName}"
         """.trimMargin()
     }
 
@@ -138,15 +144,22 @@ private fun generateGalleryScreenCallee(
         """.trimMargin()
     }
 
-    return """|
-        |$screenComponentName(
-        |   ${onNavigateBackParameter?.let { "$it," } ?: ""}
+    val hasStateComponentsArgument = screenComponent.hasStateComponentsParameterName?.let { hasStateComponentsParameterName ->
+        """|$hasStateComponentsParameterName = ${if(componentMatched.parameters.isEmpty()) "false" else "true"}"""
+    }
+
+    val hasThemeComponentsArgument = screenComponent.hasThemeComponentParameterName?.let { hasThemeComponentParameterName ->
+        // At this stage, I cannot determine whether there are theme StateComponents. I choose to pass it as a parameter
+        """|$hasThemeComponentParameterName = $hasThemeComponentParameterName"""
+    }
+
+    return """|$screenComponentName(
         |   $componentParameterName = {
         |       ${componentMatched.generateGalleryComponentCallee()}
         |   },
         |   $stateComponentsParameterName = {
         |       $stateComponentParameters
-        |   }${themeStateArgument?.let { ",\n\t$it" } ?: ""}
+        |   }${themeStateArgument?.let { ",\n\t$it" } ?: ""}${onNavigateBackParameter?.let { ",\n\t$it" } ?: ""}${componentNameArgument?.let{ ",\n\t$it" } ?: "" }${hasStateComponentsArgument?.let{ ",\n\t$it" } ?: "" }${hasThemeComponentsArgument?.let{ ",\n\t$it" } ?: "" }
         |)
     """.trimMargin()
 }
@@ -159,8 +172,7 @@ private fun ComponentMatched.generateGalleryComponentCallee(): String {
         generateComponentCalleeParameters(param)
     }.joinToString("\n") { it }
 
-    return """
-        |$componentSimpleName(
+    return """|$componentSimpleName(
         |   $parameters
         |)
     """.trimMargin()
@@ -179,6 +191,71 @@ private fun generateComponentCalleeParameters(
 
 context(FileImportsHandler)
 private fun generateStateComponentCallee(
+    componentRegistrar: ComponentRegistrar,
+    paramMap: Map<ParamWrapper, StateComponentWrapper>
+): String {
+
+    val hasComponentPages = paramMap.values.any { !it.isRow }
+
+    return if (!hasComponentPages) {
+        paramMap.map { generateStateComponentRowCallee(it.key, it.value) }.joinToString("\n") { it }
+    } else {
+        check(componentRegistrar.genericPageSubstitute != null) {
+            "The project does not have a Page Substitute"
+        }
+
+        val paramsWithPages = paramMap.filterValues { !it.isRow }
+
+        val pageStateDeclaration = "var currentStatePage by remember { mutableStateOf(0) }"
+        val backStackDeclaration = "val pageBackStack = remember { mutableListOf<Int>() }"
+
+        var paramsWithPagesCounter = 0
+        val initialPageDeclaration = paramMap.map { (param, stateComponentWrapper) ->
+            if(stateComponentWrapper.isRow) {
+                generateStateComponentRowCallee(
+                    param,
+                    stateComponentWrapper
+                )
+            } else {
+                paramsWithPagesCounter++
+                generatePageSubstituteCallee(
+                    screenDestinationNumber = paramsWithPagesCounter,
+                    param = param,
+                    pageSubstituteWrapper = componentRegistrar.genericPageSubstitute!!
+                )
+            }
+        }.joinToString("\n") { it }
+
+        // The following part heavily relies on the fact that the map passed preserves the order of keys
+        paramsWithPagesCounter = 0
+        val otherPages = paramsWithPages.map { (param, stateComponentWrapper) ->
+            val galleryScreenCallee = generateStateComponentRowCallee(
+                param = param,
+                stateComponentWrapper = stateComponentWrapper
+            )
+
+            paramsWithPagesCounter++
+            """|$paramsWithPagesCounter -> {
+                |   $galleryScreenCallee
+                |}
+            """.trimMargin()
+        }.joinToString("\n") { it }
+
+        """|$pageStateDeclaration
+            |$backStackDeclaration
+            |
+            |when (currentStatePage) {
+            |   0 -> {
+            |       $initialPageDeclaration
+            |   }
+            |   $otherPages
+            |}
+        """.trimMargin()
+    }
+}
+
+context(FileImportsHandler)
+private fun generateStateComponentRowCallee(
     param: ParamWrapper,
     stateComponentWrapper: StateComponentWrapper
 ): String {
@@ -190,12 +267,51 @@ private fun generateStateComponentCallee(
 
     val stateName = "${param.name.getShortName()}State"
 
-    return """
-        |$stateComponentSimpleName(
+    val paramNameArgument = stateComponentWrapper.paramNameParameterName?.let { paramNameParameterName ->
+        "$paramNameParameterName = \"${param.name.getShortName()}\""
+    }
+
+    val onNavigateBackArgument = if (!stateComponentWrapper.isRow && stateComponentWrapper.onNavigateBackParameterName != null) {
+
+        """|${stateComponentWrapper.onNavigateBackParameterName} = {
+            |   currentStatePage = 0
+            |}
+        """.trimMargin()
+    } else null
+
+    return """|$stateComponentSimpleName(
         |   $stateParamName = $stateName,
         |   $onStateParamName = { newState ->
         |       $stateName = newState
-        |   }
+        |   }${paramNameArgument?.let { ",\n$it" } ?: ""}${onNavigateBackArgument?.let { ",\n$it" } ?: ""}
+        |)
+    """.trimMargin()
+}
+
+context(FileImportsHandler)
+private fun generatePageSubstituteCallee(
+    screenDestinationNumber: Int,
+    param: ParamWrapper,
+    pageSubstituteWrapper: PageSubstituteWrapper
+): String {
+
+    val fqName = pageSubstituteWrapper.fqName.asString()
+    val simpleName = pageSubstituteWrapper.fqName.getShortName()
+
+    // Arguments
+    val paramNameArgument = pageSubstituteWrapper.paramNameParameterName?.let { paramNameParameterName ->
+        "$paramNameParameterName = \"${param.name.getShortName()}\""
+    }
+
+    val onNavigateToScreenArgument = """|onNavigateToScreen = {
+        |   currentStatePage = $screenDestinationNumber
+        |}""".trimMargin()
+
+    addImport(fqName)
+
+    return """|$simpleName(
+        |   ${paramNameArgument?.let { "$it," } ?: ""}
+        |   $onNavigateToScreenArgument
         |)
     """.trimMargin()
 }
